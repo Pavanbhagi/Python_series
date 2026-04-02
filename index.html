@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Days of Python | Code Series</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #3776ab; /* Python Blue */
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .day-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .badge {
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        pre {
+            border-radius: 8px;
+            margin: 20px 0 !important;
+        }
+
+        .btn-download {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--text);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .grid-30 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>30 Days of <span style="color: var(--accent);">Python</span></h1>
+    <p>Mastering logic, automation, and web integration.</p>
+</header>
+
+<div class="container">
+    <div class="day-card">
+        <span class="badge">Day 01</span>
+        <h2>Basic Script & Environment Setup</h2>
+        <p>Learn how to handle user inputs and basic arithmetic operations safely.</p>
+        
+        <pre><code class="language-python">
+# Day 1: Simple Interest Calculator
+def calculate_interest(principal, rate, time):
+    interest = (principal * rate * time) / 100
+    return interest
+
+p = float(input("Enter Principal: "))
+r = float(input("Enter Rate: "))
+t = float(input("Enter Time: "))
+
+print(f"The Total Interest is: {calculate_interest(p, r, t)}")
+        </code></pre>
+
+        <a href="day1.py" download class="btn-download">Download .py File</a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</body>
+</html>
