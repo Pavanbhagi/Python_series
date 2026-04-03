@@ -3,11 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Series</title>
+    <title>30 Days of Python | Day 2</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #3776ab; 
+            --text: #ffffff;
+            --secondary: #ffd43b; /* Python Yellow */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .day-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        .badge {
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .problem-title {
+            color: var(--secondary);
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+
+        pre {
+            border-radius: 8px;
+            margin: 15px 0 !important;
+            font-size: 0.9rem;
+        }
+
+        .btn-download {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--text);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Python Series</h1>
-    <p>This is a collection of Python programs and exercises.</p>
-    <p>Check out the Series.py file for the code.</p>
+
+<header>
+    <h1>30 Days of <span style="color: var(--accent);">Python</span></h1>
+    <p>Day 2: Strings & Logic</p>
+</header>
+
+<div class="container">
+    <div class="day-card">
+        <span class="badge">Day 02</span>
+        <h2>Strings & Conditional Logic</h2>
+        <p>Today we tackle two common interview problems: string reversal patterns and dynamic string formatting.</p>
+        
+        <div class="problem-title">Problem 1: Palindrome Checker</div>
+        <pre><code class="language-python">
+# Checks if a string reads the same forwards and backwards
+def is_palindrome(text):
+    clean_text = text.replace(" ", "").lower()
+    return clean_text == clean_text[::-1]
+
+word = input("Enter a word: ")
+print(f"Is Palindrome? {is_palindrome(word)}")
+        </code></pre>
+
+        <div class="problem-title">Problem 2: Professional Username Generator</div>
+        <pre><code class="language-python">
+# Generates a username based on name and birth year
+def generate_username(first, last, year):
+    return f"{first[:3].lower()}_{last.lower()}{str(year)[-2:]}"
+
+f_name = input("First Name: ")
+l_name = input("Last Name: ")
+b_year = input("Birth Year: ")
+
+print(f"Your generated username: {generate_username(f_name, l_name, b_year)}")
+        </code></pre>
+
+        <a href="day2.py" download class="btn-download">Download Day 2 Script</a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 </body>
 </html>
