@@ -3,127 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Python | Day 2</title>
+    <title>30 Days of Python | Pavanbhagi</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --accent: #3776ab; 
-            --text: #ffffff;
-            --secondary: #ffd43b; /* Python Yellow */
+            --accent-blue: #3776ab;
+            --accent-yellow: #ffd43b;
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0a0a0a;
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background: #050505;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
-        header {
-            padding: 60px 20px;
+        .hero {
+            padding: 80px 20px;
             text-align: center;
+            background: radial-gradient(circle at top, #1a1a1a 0%, #050505 100%);
         }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .hero span { color: var(--accent-yellow); }
 
         .container {
-            width: 90%;
-            max-width: 1000px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .day-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 30px;
-            transition: transform 0.3s ease;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
         }
 
         .day-card:hover {
+            border-color: var(--accent-blue);
             transform: translateY(-5px);
-            border-color: var(--secondary);
         }
 
         .badge {
-            background: var(--accent);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: inline-block;
+            background: var(--accent-blue);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .problem-title {
-            color: var(--secondary);
-            margin-top: 20px;
-            font-size: 1.2rem;
-        }
+        h2 { margin-top: 15px; font-size: 1.8rem; }
+        .problem-box { margin-top: 25px; }
+        .problem-title { color: var(--accent-yellow); font-weight: 600; margin-bottom: 10px; }
 
         pre {
-            border-radius: 8px;
+            border-radius: 12px !important;
             margin: 15px 0 !important;
-            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .btn-download {
-            display: inline-block;
-            padding: 10px 20px;
-            background: var(--text);
-            color: #000;
+        .footer-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
             text-decoration: none;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 0.9rem;
-            margin-top: 10px;
+            transition: 0.2s;
         }
+
+        .btn-primary { background: var(--text-main); color: #000; }
+        .btn-primary:hover { opacity: 0.8; }
+        
+        .btn-outline { border: 1px solid var(--glass-border); color: var(--text-dim); }
+        .btn-outline:hover { background: var(--glass-border); color: #fff; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>30 Days of <span style="color: var(--accent);">Python</span></h1>
-    <p>Day 2: Strings & Logic</p>
-</header>
+<div class="hero">
+    <h1>30 Days of <span>Python</span></h1>
+    <p>A high-fidelity journey through modern programming.</p>
+</div>
 
 <div class="container">
+
+    <div class="day-card">
+        <span class="badge">Day 03</span>
+        <h2>Lists & Loops</h2>
+        <p>Efficiently managing collections and automating data filtering using Pythonic patterns.</p>
+        
+        <div class="problem-box">
+            <div class="problem-title">Task Filtering (List Comprehension)</div>
+            <pre><code class="language-python"># Filtering high-priority tasks automatically
+tasks = ["Email Client", "Fix Bug (High)", "Update Docs", "Deploy (High)"]
+urgent = [t for t in tasks if "(High)" in t]
+print(f"Urgent Actions: {urgent}")</code></pre>
+        </div>
+
+        <div class="problem-box">
+            <div class="problem-title">Data Cleaning (Sets & Sorting)</div>
+            <pre><code class="language-python"># Removing duplicates and sorting values
+raw_data = [45, 12, 89, 12, 45, 10]
+cleaned = sorted(list(set(raw_data)))
+print(f"Sorted Unique Data: {cleaned}")</code></pre>
+        </div>
+
+        <div class="footer-actions">
+            <a href="Series.py" download class="btn btn-primary">Download Script</a>
+            <a href="https://github.com/Pavanbhagi/Python_series" class="btn btn-outline">View on GitHub</a>
+        </div>
+    </div>
+
     <div class="day-card">
         <span class="badge">Day 02</span>
-        <h2>Strings & Conditional Logic</h2>
-        <p>Today we tackle two common interview problems: string reversal patterns and dynamic string formatting.</p>
-        
-        <div class="problem-title">Problem 1: Palindrome Checker</div>
-        <pre><code class="language-python">
-# Checks if a string reads the same forwards and backwards
-def is_palindrome(text):
-    clean_text = text.replace(" ", "").lower()
-    return clean_text == clean_text[::-1]
-
-word = input("Enter a word: ")
-print(f"Is Palindrome? {is_palindrome(word)}")
-        </code></pre>
-
-        <div class="problem-title">Problem 2: Professional Username Generator</div>
-        <pre><code class="language-python">
-# Generates a username based on name and birth year
-def generate_username(first, last, year):
-    return f"{first[:3].lower()}_{last.lower()}{str(year)[-2:]}"
-
-f_name = input("First Name: ")
-l_name = input("Last Name: ")
-b_year = input("Birth Year: ")
-
-print(f"Your generated username: {generate_username(f_name, l_name, b_year)}")
-        </code></pre>
-
-        <a href="day2.py" download class="btn-download">Download Day 2 Script</a>
+        <h2>Strings & Logic</h2>
+        <div class="problem-box">
+            <div class="problem-title">Palindrome Checker</div>
+            <pre><code class="language-python">def is_palindrome(word):
+    clean = word.replace(" ", "").lower()
+    return clean == clean[::-1]</code></pre>
+        </div>
     </div>
+
+    <div class="day-card">
+        <span class="badge">Day 01</span>
+        <h2>Basics & Setup</h2>
+        <div class="problem-box">
+            <div class="problem-title">Simple Interest Calculator</div>
+            <pre><code class="language-python">def calculate_interest(p, r, t):
+    return (p * r * t) / 100</code></pre>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>

@@ -1,49 +1,38 @@
-# 30 Days of Python - Day 2
-# Topic: String Slicing and Conditionals
+# 30 Days of Python Series - Day 3
+# Topic: Lists, Loops, and Data Cleaning
 
-def palindrome_checker():
-    print("\n--- 1. Palindrome Checker ---")
-    user_input = input("Enter a word or phrase: ")
-    # Remove spaces and convert to lowercase for accurate checking
-    clean_text = user_input.replace(" ", "").lower()
+def filter_priority_tasks():
+    """Demonstrates List Comprehension for filtering"""
+    print("\n--- Problem 1: Priority Task Filter ---")
+    tasks = [
+        "Setup Server (High)", 
+        "Change Header Color", 
+        "Database Migration (High)", 
+        "Write Documentation"
+    ]
     
-    if clean_text == clean_text[::-1]:
-        print(f"SUCCESS: '{user_input}' is a palindrome!")
-    else:
-        print(f"INFO: '{user_input}' is not a palindrome.")
+    # Pythonic way to filter lists
+    urgent_tasks = [t for t in tasks if "(High)" in t]
+    
+    print(f"All Tasks: {tasks}")
+    print(f"Urgent Filtered: {urgent_tasks}")
 
-def username_generator():
-    print("\n--- 2. Username Generator ---")
-    first = input("Enter First Name: ")
-    last = input("Enter Last Name: ")
-    year = input("Enter Birth Year (YYYY): ")
+def clean_numerical_data():
+    """Demonstrates Sets for duplicate removal and sorting"""
+    print("\n--- Problem 2: Data Cleaner ---")
+    raw_user_ids = [102, 304, 102, 506, 304, 900, 102]
     
-    # Logic: First 3 letters of first name + full last name + last 2 digits of year
-    username = f"{first[:3].lower()}_{last.lower()}{year[-2:]}"
-    print(f"Your New Username: {username}")
+    # set() removes duplicates, sorted() puts them in order
+    unique_ids = sorted(list(set(raw_user_ids)))
+    
+    print(f"Raw Input: {raw_user_ids}")
+    print(f"Cleaned IDs: {unique_ids}")
 
 def main():
-    palindrome_checker()
-    username_generator()
-    print("\nDay 2 Complete!")
+    print("Welcome to Day 3 of the Python Series!")
+    filter_priority_tasks()
+    clean_numerical_data()
+    print("\nSession Complete. Ready for Day 4!")
 
-# 30 Days of Python - Day 1
-# Topic: Variables, Inputs, and Functions
-
-def main():
-    print("--- Simple Interest Calculator ---")
-    
-    try:
-        principal = float(input("Enter the principal amount: "))
-        rate = float(input("Enter the annual interest rate (%): "))
-        time = float(input("Enter the time in years: "))
-
-        interest = (principal * rate * time) / 100
-        total = principal + interest
-
-        print(f"\nResults:")
-        print(f"Interest Earned: {interest:.2f}")
-        print(f"Total Balance: {total:.2f}")
-        
-    except ValueError:
-        print("Please enter valid numerical values.")
+if __name__ == "__main__":
+    main()
