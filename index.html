@@ -8,150 +8,207 @@
     <style>
         :root {
             --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --accent-blue: #3776ab;
             --accent-yellow: #ffd43b;
             --text-main: #ffffff;
-            --text-dim: #b0b0b0;
+            --text-dim: #a0a0a0;
+            --bg-dark: #080808;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            background: #050505;
+            background: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Hero Section */
         .hero {
-            padding: 80px 20px;
+            padding: 100px 20px;
             text-align: center;
-            background: radial-gradient(circle at top, #1a1a1a 0%, #050505 100%);
+            background: radial-gradient(circle at center, #111 0%, #080808 100%);
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -2px;
         }
 
-        .hero span { color: var(--accent-yellow); }
+        .hero h1 span { color: var(--accent-yellow); }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
+        /* Day Card Styles */
         .day-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 32px;
-            margin-bottom: 40px;
-            transition: all 0.3s ease;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 50px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border 0.3s ease;
         }
 
         .day-card:hover {
-            border-color: var(--accent-blue);
-            transform: translateY(-5px);
+            border-color: rgba(55, 118, 171, 0.5);
+            transform: translateY(-8px);
         }
 
         .badge {
             background: var(--accent-blue);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 800;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
         }
 
-        h2 { margin-top: 15px; font-size: 1.8rem; }
-        .problem-box { margin-top: 25px; }
-        .problem-title { color: var(--accent-yellow); font-weight: 600; margin-bottom: 10px; }
+        h2 { margin: 20px 0 10px; font-size: 2rem; font-weight: 700; }
+        .description { color: var(--text-dim); margin-bottom: 30px; font-size: 1.05rem; }
+
+        .problem-container { margin-top: 30px; }
+        .problem-title { 
+            color: var(--accent-yellow); 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .problem-title::before {
+            content: "•";
+            margin-right: 10px;
+            color: var(--accent-blue);
+        }
 
         pre {
-            border-radius: 12px !important;
-            margin: 15px 0 !important;
-            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px !important;
+            padding: 20px !important;
+            background: #000000 !important;
+            border: 1px solid rgba(255,255,255,0.05) !important;
+            font-size: 0.9rem !important;
         }
 
-        .footer-actions {
-            margin-top: 20px;
+        .card-footer {
+            margin-top: 30px;
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .btn {
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 10px;
+            padding: 12px 28px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: 0.2s;
+            font-size: 0.95rem;
+            transition: 0.3s;
         }
 
-        .btn-primary { background: var(--text-main); color: #000; }
-        .btn-primary:hover { opacity: 0.8; }
-        
-        .btn-outline { border: 1px solid var(--glass-border); color: var(--text-dim); }
-        .btn-outline:hover { background: var(--glass-border); color: #fff; }
+        .btn-main { background: #fff; color: #000; }
+        .btn-main:hover { background: #e0e0e0; transform: scale(1.02); }
+
+        .btn-git { border: 1px solid var(--glass-border); color: var(--text-dim); }
+        .btn-git:hover { background: var(--glass-border); color: #fff; }
+
+        /* Scroll Progress Bar */
+        .progress-wrap {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
+            background: rgba(255,255,255,0.05);
+            z-index: 1000;
+        }
+        .progress-bar { height: 100%; background: var(--accent-blue); width: 13%; /* 4/30 days */ }
     </style>
 </head>
 <body>
 
+<div class="progress-wrap"><div class="progress-bar"></div></div>
+
 <div class="hero">
     <h1>30 Days of <span>Python</span></h1>
-    <p>A high-fidelity journey through modern programming.</p>
+    <p>A masterclass in logic, automation, and high-performance scripting.</p>
 </div>
 
 <div class="container">
 
     <div class="day-card">
-        <span class="badge">Day 03</span>
-        <h2>Lists & Loops</h2>
-        <p>Efficiently managing collections and automating data filtering using Pythonic patterns.</p>
+        <div class="badge">Day 04</div>
+        <h2>Dictionaries & Mapping</h2>
+        <p class="description">Mastering Key-Value pairs for structured data and API handling.</p>
         
-        <div class="problem-box">
-            <div class="problem-title">Task Filtering (List Comprehension)</div>
-            <pre><code class="language-python"># Filtering high-priority tasks automatically
-tasks = ["Email Client", "Fix Bug (High)", "Update Docs", "Deploy (High)"]
-urgent = [t for t in tasks if "(High)" in t]
-print(f"Urgent Actions: {urgent}")</code></pre>
+        <div class="problem-container">
+            <div class="problem-title">Safe Data Retrieval</div>
+            <pre><code class="language-python"># Prevent crashes using .get()
+user = {"name": "Pavan", "role": "Developer"}
+print(user.get("email", "No Email Found"))</code></pre>
         </div>
 
-        <div class="problem-box">
-            <div class="problem-title">Data Cleaning (Sets & Sorting)</div>
-            <pre><code class="language-python"># Removing duplicates and sorting values
-raw_data = [45, 12, 89, 12, 45, 10]
-cleaned = sorted(list(set(raw_data)))
-print(f"Sorted Unique Data: {cleaned}")</code></pre>
+        <div class="problem-container">
+            <div class="problem-title">Nested JSON Access</div>
+            <pre><code class="language-python"># Accessing deep data layers
+config = {"web": {"theme": "dark", "version": 1.2}}
+print(f"Current Theme: {config['web']['theme']}")</code></pre>
         </div>
 
-        <div class="footer-actions">
-            <a href="Series.py" download class="btn btn-primary">Download Script</a>
-            <a href="https://github.com/Pavanbhagi/Python_series" class="btn btn-outline">View on GitHub</a>
+        <div class="card-footer">
+            <a href="Series.py" download class="btn btn-main">Download Python File</a>
+            <a href="https://github.com/Pavanbhagi/Python_series" class="btn btn-git">GitHub Source</a>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 02</span>
+        <div class="badge">Day 03</div>
+        <h2>Lists & Loops</h2>
+        <p class="description">Processing collections efficiently with List Comprehensions.</p>
+        
+        <div class="problem-container">
+            <div class="problem-title">List Comprehension Filter</div>
+            <pre><code class="language-python"># One-line filtering
+data = ["Admin", "User", "Admin", "Guest"]
+admins = [x for x in data if x == "Admin"]</code></pre>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge">Day 02</div>
         <h2>Strings & Logic</h2>
-        <div class="problem-box">
-            <div class="problem-title">Palindrome Checker</div>
-            <pre><code class="language-python">def is_palindrome(word):
-    clean = word.replace(" ", "").lower()
-    return clean == clean[::-1]</code></pre>
+        <div class="problem-container">
+            <div class="problem-title">Palindrome Logic</div>
+            <pre><code class="language-python">def is_palindrome(s):
+    return s.lower() == s.lower()[::-1]</code></pre>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 01</span>
+        <div class="badge">Day 01</div>
         <h2>Basics & Setup</h2>
-        <div class="problem-box">
-            <div class="problem-title">Simple Interest Calculator</div>
-            <pre><code class="language-python">def calculate_interest(p, r, t):
+        <div class="problem-container">
+            <div class="problem-title">Interest Calculator</div>
+            <pre><code class="language-python">def calc(p, r, t):
     return (p * r * t) / 100</code></pre>
         </div>
     </div>
@@ -160,5 +217,6 @@ print(f"Sorted Unique Data: {cleaned}")</code></pre>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
 </body>
 </html>
