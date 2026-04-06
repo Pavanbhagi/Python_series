@@ -1,38 +1,37 @@
-# 30 Days of Python Series - Day 3
-# Topic: Lists, Loops, and Data Cleaning
+# 30 Days of Python Series - Day 05
+# Created by Pavanbhagi
 
-def filter_priority_tasks():
-    """Demonstrates List Comprehension for filtering"""
-    print("\n--- Problem 1: Priority Task Filter ---")
-    tasks = [
-        "Setup Server (High)", 
-        "Change Header Color", 
-        "Database Migration (High)", 
-        "Write Documentation"
-    ]
-    
-    # Pythonic way to filter lists
-    urgent_tasks = [t for t in tasks if "(High)" in t]
-    
-    print(f"All Tasks: {tasks}")
-    print(f"Urgent Filtered: {urgent_tasks}")
+def error_handling_demo():
+    print("\n--- Day 5: Problem 1 (Basic Exception Handling) ---")
+    try:
+        numerator = 100
+        denominator = input("Enter a number to divide 100 by: ")
+        # Intentional error risk if user types a string or 0
+        result = numerator / float(denominator)
+        print(f"Result: {result}")
+    except ValueError:
+        print("Error: You must enter a numerical value.")
+    except ZeroDivisionError:
+        print("Error: Division by zero is mathematically impossible.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
-def clean_numerical_data():
-    """Demonstrates Sets for duplicate removal and sorting"""
-    print("\n--- Problem 2: Data Cleaner ---")
-    raw_user_ids = [102, 304, 102, 506, 304, 900, 102]
-    
-    # set() removes duplicates, sorted() puts them in order
-    unique_ids = sorted(list(set(raw_user_ids)))
-    
-    print(f"Raw Input: {raw_user_ids}")
-    print(f"Cleaned IDs: {unique_ids}")
-
-def main():
-    print("Welcome to Day 3 of the Python Series!")
-    filter_priority_tasks()
-    clean_numerical_data()
-    print("\nSession Complete. Ready for Day 4!")
+def validation_demo():
+    print("\n--- Day 5: Problem 2 (Safe Input Loop) ---")
+    while True:
+        try:
+            age = int(input("Enter your age to continue: "))
+            if age < 0:
+                print("Age cannot be negative.")
+                continue
+            print(f"Access Granted. Age verified: {age}")
+            break
+        except ValueError:
+            print("Invalid input. Please enter a whole number.")
+        finally:
+            print("Check sequence complete.")
 
 if __name__ == "__main__":
-    main()
+    print("Welcome to Day 5 of the 30 Days of Python!")
+    error_handling_demo()
+    validation_demo()
