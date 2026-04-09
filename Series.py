@@ -1,37 +1,42 @@
-# 30 Days of Python Series - Day 05
+# 30 Days of Python - Master Script (Days 1-6)
 # Created by Pavanbhagi
 
-def error_handling_demo():
-    print("\n--- Day 5: Problem 1 (Basic Exception Handling) ---")
-    try:
-        numerator = 100
-        denominator = input("Enter a number to divide 100 by: ")
-        # Intentional error risk if user types a string or 0
-        result = numerator / float(denominator)
-        print(f"Result: {result}")
-    except ValueError:
-        print("Error: You must enter a numerical value.")
-    except ZeroDivisionError:
-        print("Error: Division by zero is mathematically impossible.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+def day_1_basics():
+    print("Day 1: Hello Python!")
 
-def validation_demo():
-    print("\n--- Day 5: Problem 2 (Safe Input Loop) ---")
-    while True:
-        try:
-            age = int(input("Enter your age to continue: "))
-            if age < 0:
-                print("Age cannot be negative.")
-                continue
-            print(f"Access Granted. Age verified: {age}")
-            break
-        except ValueError:
-            print("Invalid input. Please enter a whole number.")
-        finally:
-            print("Check sequence complete.")
+def day_2_strings():
+    text = "Python"
+    print(f"Day 2: Reversed string is {text[::-1]}")
+
+def day_3_lists():
+    nums = [1, 2, 3]
+    print(f"Day 3: List doubled -> {[x*2 for x in nums]}")
+
+def day_4_dicts():
+    user = {"name": "Pavan", "day": 4}
+    print(f"Day 4: User name is {user.get('name')}")
+
+def day_5_exceptions():
+    print("Day 5: Error Handling...")
+    try:
+        res = 10 / 0
+    except ZeroDivisionError:
+        print("Handled Zero Division Error successfully.")
+
+def day_6_files():
+    print("Day 6: File Handling...")
+    filename = "pavan_series.txt"
+    with open(filename, "w") as f:
+        f.write("Learning File I/O on Day 6.")
+    
+    with open(filename, "r") as f:
+        print(f"File content: {f.read()}")
 
 if __name__ == "__main__":
-    print("Welcome to Day 5 of the 30 Days of Python!")
-    error_handling_demo()
-    validation_demo()
+    print("--- 30 DAYS OF PYTHON SERIES ---")
+    day_1_basics()
+    day_2_strings()
+    day_3_lists()
+    day_4_dicts()
+    day_5_exceptions()
+    day_6_files()
