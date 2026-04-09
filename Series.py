@@ -1,36 +1,36 @@
-# 30 Days of Python - Master Script (Days 1-6)
+# 30 Days of Python - Master Script (Days 1-7)
 # Created by Pavanbhagi
+
+class PythonSeries:
+    def __init__(self, username):
+        self.username = username
+        self.progress = 7
+
+    def day_7_oop(self):
+        print(f"Day 7: {self.username} is learning Object-Oriented Programming!")
 
 def day_1_basics():
     print("Day 1: Hello Python!")
 
 def day_2_strings():
-    text = "Python"
-    print(f"Day 2: Reversed string is {text[::-1]}")
+    print(f"Day 2: Reversed string -> {'Python'[::-1]}")
 
 def day_3_lists():
-    nums = [1, 2, 3]
-    print(f"Day 3: List doubled -> {[x*2 for x in nums]}")
+    print(f"Day 3: Squares -> {[x*x for x in range(5)]}")
 
 def day_4_dicts():
-    user = {"name": "Pavan", "day": 4}
-    print(f"Day 4: User name is {user.get('name')}")
+    print(f"Day 4: Dict access -> {'Success'}")
 
 def day_5_exceptions():
-    print("Day 5: Error Handling...")
     try:
-        res = 10 / 0
+        1/0
     except ZeroDivisionError:
-        print("Handled Zero Division Error successfully.")
+        print("Day 5: Exception Handled.")
 
 def day_6_files():
-    print("Day 6: File Handling...")
-    filename = "pavan_series.txt"
-    with open(filename, "w") as f:
-        f.write("Learning File I/O on Day 6.")
-    
-    with open(filename, "r") as f:
-        print(f"File content: {f.read()}")
+    with open("temp.txt", "w") as f:
+        f.write("Day 6 Data")
+    print("Day 6: File I/O Success.")
 
 if __name__ == "__main__":
     print("--- 30 DAYS OF PYTHON SERIES ---")
@@ -40,3 +40,7 @@ if __name__ == "__main__":
     day_4_dicts()
     day_5_exceptions()
     day_6_files()
+    
+    # OOP Implementation for Day 7
+    series = PythonSeries("Pavan")
+    series.day_7_oop()

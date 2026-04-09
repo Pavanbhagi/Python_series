@@ -42,7 +42,6 @@
 
         #engine-status { font-size: 0.75rem; color: var(--text-dim); text-align: center; margin-bottom: 20px; }
 
-        /* Card System */
         .day-card {
             background: #fff;
             border: 1px solid var(--border-light);
@@ -67,7 +66,6 @@
         h2 { margin: 15px 0 10px; font-size: 1.6rem; font-weight: 600; }
         .desc { color: var(--text-dim); margin-bottom: 25px; font-size: 0.95rem; }
 
-        /* Editor Area */
         .editor-wrapper {
             border: 1px solid var(--border-light);
             border-radius: 12px;
@@ -124,15 +122,35 @@
     </div>
 
     <div class="day-card">
+        <span class="badge">Day 07</span>
+        <h2>Classes & Objects (OOP)</h2>
+        <p class="desc">Creating reusable blueprints for data and functions.</p>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-7">
+class Robot:
+    def __init__(self, name):
+        self.name = name
+    
+    def greet(self):
+        return f"Hello, I am {self.name}!"
+
+# Creating an object
+my_robot = Robot("PavanBot")
+print(my_robot.greet())</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('7')">Run Script</button></div>
+            <div class="console" id="output-7"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
         <span class="badge">Day 06</span>
         <h2>File Handling</h2>
-        <p class="desc">Creating, writing, and reading local files using Python.</p>
+        <p class="desc">Reading and writing files.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-6">
-with open("test.txt", "w") as f:
-    f.write("Pavanbhagi Python Series\nDay 6: File I/O")
-
-with open("test.txt", "r") as f:
+with open("note.txt", "w") as f:
+    f.write("Day 6 logic saved.")
+with open("note.txt", "r") as f:
     print(f.read())</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('6')">Run Script</button></div>
             <div class="console" id="output-6"></div>
@@ -142,13 +160,12 @@ with open("test.txt", "r") as f:
     <div class="day-card">
         <span class="badge">Day 05</span>
         <h2>Exception Handling</h2>
-        <p class="desc">Catching runtime errors to prevent application crashes.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-5">
 try:
-    res = 10 / 0
+    print(10 / 0)
 except ZeroDivisionError:
-    print("Handled: Cannot divide by zero!")</textarea>
+    print("Handled Zero Division!")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('5')">Run Script</button></div>
             <div class="console" id="output-5"></div>
         </div>
@@ -157,11 +174,10 @@ except ZeroDivisionError:
     <div class="day-card">
         <span class="badge">Day 04</span>
         <h2>Dictionaries</h2>
-        <p class="desc">Key-Value pair management.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-4">
-data = {"user": "Pavan", "level": 6}
-print(data.get("user"))</textarea>
+user = {"name": "Pavan", "status": "Coding"}
+print(user.get("status"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('4')">Run Script</button></div>
             <div class="console" id="output-4"></div>
         </div>
@@ -170,11 +186,9 @@ print(data.get("user"))</textarea>
     <div class="day-card">
         <span class="badge">Day 03</span>
         <h2>Lists</h2>
-        <p class="desc">Array manipulation and list comprehension.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-3">
-names = ["Python", "JS", "C++"]
-print([x.upper() for x in names])</textarea>
+print([x*x for x in range(5)])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('3')">Run Script</button></div>
             <div class="console" id="output-3"></div>
         </div>
@@ -183,11 +197,9 @@ print([x.upper() for x in names])</textarea>
     <div class="day-card">
         <span class="badge">Day 02</span>
         <h2>Strings</h2>
-        <p class="desc">Text formatting and slicing.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-2">
-msg = "Python"
-print(msg[::-1])</textarea>
+print("Python"[::-1])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('2')">Run Script</button></div>
             <div class="console" id="output-2"></div>
         </div>
@@ -196,10 +208,9 @@ print(msg[::-1])</textarea>
     <div class="day-card">
         <span class="badge">Day 01</span>
         <h2>Basics</h2>
-        <p class="desc">Printing and variables.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-1">
-print("Hello World - Day 1")</textarea>
+print("Day 1 Complete")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('1')">Run Script</button></div>
             <div class="console" id="output-1"></div>
         </div>
@@ -227,7 +238,7 @@ print("Hello World - Day 1")</textarea>
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Executed.";
+            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Executed successfully.";
         } catch (e) { out.innerText = e.message; }
     }
     init();
