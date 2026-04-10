@@ -122,21 +122,41 @@
     </div>
 
     <div class="day-card">
+        <span class="badge">Day 08</span>
+        <h2>Modules & Libraries</h2>
+        <p class="desc">Importing built-in tools like <code>math</code> and <code>random</code>.</p>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-8">
+import math
+import random
+
+# Using math module
+radius = 5
+area = math.pi * math.pow(radius, 2)
+print(f"Area of circle: {area:.2f}")
+
+# Using random module
+dice_roll = random.randint(1, 6)
+print(f"You rolled a: {dice_roll}")</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('8')">Run Script</button></div>
+            <div class="console" id="output-8"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
         <span class="badge">Day 07</span>
         <h2>Classes & Objects (OOP)</h2>
-        <p class="desc">Creating reusable blueprints for data and functions.</p>
+        <p class="desc">Blueprints for objects.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-7">
-class Robot:
-    def __init__(self, name):
-        self.name = name
-    
-    def greet(self):
-        return f"Hello, I am {self.name}!"
+class Car:
+    def __init__(self, brand):
+        self.brand = brand
+    def drive(self):
+        return f"The {self.brand} is moving!"
 
-# Creating an object
-my_robot = Robot("PavanBot")
-print(my_robot.greet())</textarea>
+my_car = Car("Tesla")
+print(my_car.drive())</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('7')">Run Script</button></div>
             <div class="console" id="output-7"></div>
         </div>
@@ -145,12 +165,11 @@ print(my_robot.greet())</textarea>
     <div class="day-card">
         <span class="badge">Day 06</span>
         <h2>File Handling</h2>
-        <p class="desc">Reading and writing files.</p>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-6">
-with open("note.txt", "w") as f:
-    f.write("Day 6 logic saved.")
-with open("note.txt", "r") as f:
+with open("data.txt", "w") as f:
+    f.write("Persistence check.")
+with open("data.txt", "r") as f:
     print(f.read())</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('6')">Run Script</button></div>
             <div class="console" id="output-6"></div>
@@ -163,9 +182,9 @@ with open("note.txt", "r") as f:
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-5">
 try:
-    print(10 / 0)
+    print(1 / 0)
 except ZeroDivisionError:
-    print("Handled Zero Division!")</textarea>
+    print("Caught division by zero.")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('5')">Run Script</button></div>
             <div class="console" id="output-5"></div>
         </div>
@@ -176,8 +195,8 @@ except ZeroDivisionError:
         <h2>Dictionaries</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-4">
-user = {"name": "Pavan", "status": "Coding"}
-print(user.get("status"))</textarea>
+user = {"id": 1, "name": "Pavan"}
+print(user["name"])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('4')">Run Script</button></div>
             <div class="console" id="output-4"></div>
         </div>
@@ -188,7 +207,7 @@ print(user.get("status"))</textarea>
         <h2>Lists</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-3">
-print([x*x for x in range(5)])</textarea>
+print([x for x in range(10) if x % 2 == 0])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('3')">Run Script</button></div>
             <div class="console" id="output-3"></div>
         </div>
@@ -199,7 +218,7 @@ print([x*x for x in range(5)])</textarea>
         <h2>Strings</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-2">
-print("Python"[::-1])</textarea>
+print("Interactive"[::-1])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('2')">Run Script</button></div>
             <div class="console" id="output-2"></div>
         </div>
@@ -210,7 +229,7 @@ print("Python"[::-1])</textarea>
         <h2>Basics</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-1">
-print("Day 1 Complete")</textarea>
+print("Day 1: Setup Complete")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('1')">Run Script</button></div>
             <div class="console" id="output-1"></div>
         </div>
@@ -238,7 +257,7 @@ print("Day 1 Complete")</textarea>
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Executed successfully.";
+            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Done.";
         } catch (e) { out.innerText = e.message; }
     }
     init();

@@ -1,46 +1,27 @@
-# 30 Days of Python - Master Script (Days 1-7)
-# Created by Pavanbhagi
+# 30 Days of Python - Master Script (Days 1-8)
+# pavanbhagi code series
 
-class PythonSeries:
-    def __init__(self, username):
-        self.username = username
-        self.progress = 7
+import math
+import random
 
-    def day_7_oop(self):
-        print(f"Day 7: {self.username} is learning Object-Oriented Programming!")
+def day_8_modules():
+    print("Day 8: Modules & Libraries")
+    print(f"Math: Square root of 16 is {math.sqrt(16)}")
+    print(f"Random: Number between 1-100: {random.randint(1, 100)}")
 
-def day_1_basics():
-    print("Day 1: Hello Python!")
-
-def day_2_strings():
-    print(f"Day 2: Reversed string -> {'Python'[::-1]}")
-
-def day_3_lists():
-    print(f"Day 3: Squares -> {[x*x for x in range(5)]}")
-
-def day_4_dicts():
-    print(f"Day 4: Dict access -> {'Success'}")
-
-def day_5_exceptions():
-    try:
-        1/0
-    except ZeroDivisionError:
-        print("Day 5: Exception Handled.")
-
-def day_6_files():
-    with open("temp.txt", "w") as f:
-        f.write("Day 6 Data")
-    print("Day 6: File I/O Success.")
+class PavanSeries:
+    def __init__(self, day):
+        self.day = day
+    def show(self):
+        print(f"Currently on Day {self.day}")
 
 if __name__ == "__main__":
-    print("--- 30 DAYS OF PYTHON SERIES ---")
-    day_1_basics()
-    day_2_strings()
-    day_3_lists()
-    day_4_dicts()
-    day_5_exceptions()
-    day_6_files()
+    # Previous days logic
+    print("Running 30 Days of Python...")
     
-    # OOP Implementation for Day 7
-    series = PythonSeries("Pavan")
-    series.day_7_oop()
+    # Day 7 Logic (OOP)
+    p = PavanSeries(8)
+    p.show()
+    
+    # Day 8 Logic (Modules)
+    day_8_modules()
