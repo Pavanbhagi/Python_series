@@ -66,7 +66,6 @@
             border-radius: 18px;
             padding: 30px;
             margin-bottom: 40px;
-            position: relative;
         }
 
         .badge-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -82,9 +81,8 @@
         
         .run-btn { background: var(--accent-yellow); color: #000; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         
-        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; line-height: 1.5; }
+        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; }
 
-        /* Toast Notification */
         #toast { position: fixed; bottom: 20px; right: 20px; background: var(--toast-bg); color: white; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transform: translateY(100px); transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 1000; border: 1px solid var(--accent-yellow); }
         #toast.show { opacity: 1; transform: translateY(0); }
 
@@ -93,51 +91,65 @@
 </head>
 <body data-theme="light">
 
-<div id="toast">Link copied to clipboard! 🚀</div>
+<div id="toast">Link copied! 🚀</div>
 
 <div class="container">
     <div class="top-nav">
-        <div id="status">Loading Python Engine...</div>
+        <div id="status">Loading Engine...</div>
         <button class="theme-toggle" onclick="toggleTheme()">🌓 TOGGLE THEME</button>
     </div>
 
     <div class="header">
         <h1>30 Days <span>Python</span></h1>
-        <p>Advanced Interactive Series by Pavanbhagi</p>
+        <p>Pro Series Dashboard by Pavanbhagi</p>
     </div>
 
     <div class="day-card">
         <div class="badge-row">
-            <span class="badge">Day 10: Logic</span>
+            <span class="badge">Day 11: Performance</span>
             <div>
-                <button class="btn-link" onclick="copyRawCode('10')">📋 Copy</button>
-                <button class="btn-link" onclick="shareCode('10')">🔗 Share</button>
+                <button class="btn-link" onclick="copyRawCode('11')">📋 Copy</button>
+                <button class="btn-link" onclick="shareCode('11')">🔗 Share</button>
             </div>
         </div>
+        <h2>Generators (yield)</h2>
+        <p>Create memory-efficient iterators that "yield" data one by one.</p>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-11">
+def countdown(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+# Using the generator
+print("Counting down...")
+for num in countdown(5):
+    print(num)
+
+print("Liftoff! 🚀")</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('11')">Run Script</button></div>
+            <div class="console" id="output-11"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge-row"><span class="badge">Day 10: Logic</span></div>
         <h2>List Comprehension</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-10">
-# Professional one-liners
-nums = [1, 2, 3, 4, 5, 6]
-squares = [n**2 for n in nums if n % 2 == 0]
-print(f"Original: {nums}")
-print(f"Even Squares: {squares}")</textarea>
+squares = [x**2 for x in range(10) if x % 2 == 0]
+print(f"Even squares: {squares}")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('10')">Run Script</button></div>
             <div class="console" id="output-10"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row">
-            <span class="badge">Day 09: Functions</span>
-            <div><button class="btn-link" onclick="copyRawCode('09')">📋 Copy</button></div>
-        </div>
-        <h2>Functions & Args</h2>
+        <div class="badge-row"><span class="badge">Day 09: Functions</span></div>
+        <h2>Functions</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-09">
-def greet(name, msg="Happy Coding!"):
-    return f"Hello {name}, {msg}"
-
+def greet(user): return f"Hello, {user}!"
 print(greet("Pavan"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('09')">Run Script</button></div>
             <div class="console" id="output-09"></div>
@@ -150,8 +162,7 @@ print(greet("Pavan"))</textarea>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-08">
 import math, random
-print(f"Pi: {math.pi}")
-print(f"Random: {random.randint(1, 100)}")</textarea>
+print(math.sqrt(100), random.randint(1,10))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('08')">Run Script</button></div>
             <div class="console" id="output-08"></div>
         </div>
@@ -159,15 +170,12 @@ print(f"Random: {random.randint(1, 100)}")</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 07: OOP</span></div>
-        <h2>Classes & Objects</h2>
+        <h2>Classes</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-07">
-class Dev:
-    def __init__(self, name): self.name = name
-    def say_hi(self): print(f"Hi, I am {self.name}")
-
-p = Dev("Pavan")
-p.say_hi()</textarea>
+class Bot:
+    def hi(self): print("Hi!")
+Bot().hi()</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('07')">Run Script</button></div>
             <div class="console" id="output-07"></div>
         </div>
@@ -175,11 +183,11 @@ p.say_hi()</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 06: Files</span></div>
-        <h2>File Handling</h2>
+        <h2>File I/O</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-06">
-with open("test.txt", "w") as f: f.write("Day 6 Success")
-with open("test.txt", "r") as f: print(f.read())</textarea>
+with open("d.txt", "w") as f: f.write("OK")
+with open("d.txt", "r") as f: print(f.read())</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('06')">Run Script</button></div>
             <div class="console" id="output-06"></div>
         </div>
@@ -187,25 +195,21 @@ with open("test.txt", "r") as f: print(f.read())</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 05: Errors</span></div>
-        <h2>Try & Except</h2>
+        <h2>Exceptions</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-05">
-try:
-    x = 10 / 0
-except ZeroDivisionError:
-    print("Handled: Division by zero")</textarea>
+try: 1/0
+except: print("Error caught")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('05')">Run Script</button></div>
             <div class="console" id="output-05"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 04: Dicts</span></div>
-        <h2>Dictionaries</h2>
+        <span class="badge">Day 04: Dicts</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-04">
-user = {"name": "Pavan", "role": "Dev"}
-print(user.get("role"))</textarea>
+print({"id": 1}.get("id"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('04')">Run Script</button></div>
             <div class="console" id="output-04"></div>
         </div>
@@ -215,8 +219,7 @@ print(user.get("role"))</textarea>
         <span class="badge">Day 03: Lists</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-03">
-fruits = ["Apple", "Mango", "Banana"]
-print(fruits[1])</textarea>
+print([1, 2, 3][0])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('03')">Run Script</button></div>
             <div class="console" id="output-03"></div>
         </div>
@@ -226,18 +229,17 @@ print(fruits[1])</textarea>
         <span class="badge">Day 02: Strings</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-02">
-name = "Python"
-print(name[::-1])</textarea>
-            <div class="actions"><button class="run-btn" onclick="runCode('2')">Run Script</button></div>
-            <div class="console" id="output-2"></div>
+print("Python"[::-1])</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('02')">Run Script</button></div>
+            <div class="console" id="output-02"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 01: Start</span>
+        <span class="badge">Day 01: Setup</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-01">
-print("Welcome to 30 Days of Python!")</textarea>
+print("Hello Pavan!")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('01')">Run Script</button></div>
             <div class="console" id="output-01"></div>
         </div>
@@ -251,20 +253,17 @@ print("Welcome to 30 Days of Python!")</textarea>
 
     async function init() {
         pyodide = await loadPyodide();
-        document.getElementById('status').innerText = "Engine Status: Online ⚡";
+        document.getElementById('status').innerText = "Python Ready ⚡";
         
         document.querySelectorAll('.py-editor').forEach(el => {
             const id = el.id.split('-')[1];
-            
-            // Local Storage Persistence
             const saved = localStorage.getItem(`python_day_${id}`);
             if(saved) el.value = saved;
 
             editors[id] = CodeMirror.fromTextArea(el, {
                 mode: "python",
                 theme: document.body.dataset.theme === "dark" ? "dracula" : "neo",
-                lineNumbers: true,
-                indentUnit: 4
+                lineNumbers: true
             });
 
             editors[id].on("change", (cm) => {
@@ -277,11 +276,11 @@ print("Welcome to 30 Days of Python!")</textarea>
     async function runCode(id) {
         const out = document.getElementById(`output-${id}`);
         out.style.display = "block";
-        out.innerText = "Executing...";
+        out.innerText = "Running...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished (No Output).";
+            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
         } catch (e) { out.innerText = `⚠️ Error:\n${e.message}`; }
     }
 
@@ -292,7 +291,6 @@ print("Welcome to 30 Days of Python!")</textarea>
         Object.values(editors).forEach(ed => ed.setOption("theme", cmTheme));
     }
 
-    // Google-Mind: Toast Helper
     function showToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg;
@@ -300,19 +298,16 @@ print("Welcome to 30 Days of Python!")</textarea>
         setTimeout(() => t.classList.remove("show"), 3000);
     }
 
-    // Copy Content
     function copyRawCode(id) {
-        const code = editors[id].getValue();
-        navigator.clipboard.writeText(code);
-        showToast("Code copied to clipboard! 📋");
+        navigator.clipboard.writeText(editors[id].getValue());
+        showToast("Code Copied! 📋");
     }
 
-    // Share URL
     function shareCode(id) {
         const code = btoa(editors[id].getValue());
         const url = `${window.location.origin}${window.location.pathname}?day=${id}&code=${code}`;
         navigator.clipboard.writeText(url);
-        showToast("Shareable link generated! 🔗");
+        showToast("Link Generated! 🔗");
     }
 
     function checkURLParams() {
