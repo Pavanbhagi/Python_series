@@ -81,7 +81,7 @@
         
         .run-btn { background: var(--accent-yellow); color: #000; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         
-        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; }
+        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; line-height: 1.5; }
 
         #toast { position: fixed; bottom: 20px; right: 20px; background: var(--toast-bg); color: white; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transform: translateY(100px); transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 1000; border: 1px solid var(--accent-yellow); }
         #toast.show { opacity: 1; transform: translateY(0); }
@@ -106,27 +106,43 @@
 
     <div class="day-card">
         <div class="badge-row">
-            <span class="badge">Day 11: Performance</span>
+            <span class="badge">Day 12: Design Patterns</span>
             <div>
-                <button class="btn-link" onclick="copyRawCode('11')">📋 Copy</button>
-                <button class="btn-link" onclick="shareCode('11')">🔗 Share</button>
+                <button class="btn-link" onclick="copyRawCode('12')">📋 Copy</button>
+                <button class="btn-link" onclick="shareCode('12')">🔗 Share</button>
             </div>
         </div>
-        <h2>Generators (yield)</h2>
-        <p>Create memory-efficient iterators that "yield" data one by one.</p>
+        <h2>Decorators (@)</h2>
+        <p>Wrap a function to add extra functionality dynamically.</p>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-12">
+def log_action(func):
+    def wrapper():
+        print("--- Action Starting ---")
+        func()
+        print("--- Action Finished ---")
+    return wrapper
+
+@log_action
+def pavan_codes():
+    print("Writing Python logic...")
+
+pavan_codes()</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('12')">Run Script</button></div>
+            <div class="console" id="output-12"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge-row"><span class="badge">Day 11: Performance</span></div>
+        <h2>Generators</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-11">
 def countdown(n):
     while n > 0:
         yield n
         n -= 1
-
-# Using the generator
-print("Counting down...")
-for num in countdown(5):
-    print(num)
-
-print("Liftoff! 🚀")</textarea>
+for x in countdown(3): print(x)</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('11')">Run Script</button></div>
             <div class="console" id="output-11"></div>
         </div>
@@ -137,8 +153,7 @@ print("Liftoff! 🚀")</textarea>
         <h2>List Comprehension</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-10">
-squares = [x**2 for x in range(10) if x % 2 == 0]
-print(f"Even squares: {squares}")</textarea>
+print([x**2 for x in range(5)])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('10')">Run Script</button></div>
             <div class="console" id="output-10"></div>
         </div>
@@ -149,8 +164,8 @@ print(f"Even squares: {squares}")</textarea>
         <h2>Functions</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-09">
-def greet(user): return f"Hello, {user}!"
-print(greet("Pavan"))</textarea>
+def hi(name): return f"Hi {name}"
+print(hi("Pavan"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('09')">Run Script</button></div>
             <div class="console" id="output-09"></div>
         </div>
@@ -158,11 +173,11 @@ print(greet("Pavan"))</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 08: Modules</span></div>
-        <h2>Math & Random</h2>
+        <h2>Modules</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-08">
-import math, random
-print(math.sqrt(100), random.randint(1,10))</textarea>
+import math
+print(math.pi)</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('08')">Run Script</button></div>
             <div class="console" id="output-08"></div>
         </div>
@@ -173,9 +188,8 @@ print(math.sqrt(100), random.randint(1,10))</textarea>
         <h2>Classes</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-07">
-class Bot:
-    def hi(self): print("Hi!")
-Bot().hi()</textarea>
+class A: pass
+print("Class defined")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('07')">Run Script</button></div>
             <div class="console" id="output-07"></div>
         </div>
@@ -183,23 +197,21 @@ Bot().hi()</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 06: Files</span></div>
-        <h2>File I/O</h2>
+        <h2>File Handling</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-06">
-with open("d.txt", "w") as f: f.write("OK")
-with open("d.txt", "r") as f: print(f.read())</textarea>
+print("File I/O Demo")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('06')">Run Script</button></div>
             <div class="console" id="output-06"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 05: Errors</span></div>
-        <h2>Exceptions</h2>
+        <span class="badge">Day 05: Errors</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-05">
 try: 1/0
-except: print("Error caught")</textarea>
+except: print("Error handled")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('05')">Run Script</button></div>
             <div class="console" id="output-05"></div>
         </div>
@@ -209,7 +221,7 @@ except: print("Error caught")</textarea>
         <span class="badge">Day 04: Dicts</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-04">
-print({"id": 1}.get("id"))</textarea>
+print({"a":1}.get("a"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('04')">Run Script</button></div>
             <div class="console" id="output-04"></div>
         </div>
@@ -219,7 +231,7 @@ print({"id": 1}.get("id"))</textarea>
         <span class="badge">Day 03: Lists</span>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-03">
-print([1, 2, 3][0])</textarea>
+print([1,2,3])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('03')">Run Script</button></div>
             <div class="console" id="output-03"></div>
         </div>
