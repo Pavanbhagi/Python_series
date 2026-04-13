@@ -22,6 +22,7 @@
             --card-bg: #ffffff;
             --console-bg: #1d1d1f;
             --toast-bg: #1d1d1f;
+            --modal-overlay: rgba(0,0,0,0.4);
         }
 
         [data-theme="dark"] {
@@ -44,8 +45,26 @@
 
         .container { width: 100%; max-width: 850px; padding: 40px 20px; }
 
-        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         
+        .version-pill { 
+            background: #f2f2f7; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            color: var(--text-dim);
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+            transition: 0.2s;
+        }
+        .version-pill:hover { background: var(--accent-yellow); color: #000; }
+        
+        /* POPUP MODAL */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: var(--modal-overlay); backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card-bg); margin: 10% auto; padding: 30px; border-radius: 20px; width: 80%; max-width: 500px; border: 1px solid var(--border-light); position: relative; }
+        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: var(--text-dim); }
+
         .theme-toggle {
             background: var(--accent-yellow);
             border: none;
@@ -71,8 +90,7 @@
         .badge-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .badge { background: var(--accent-yellow); color: #000; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
         
-        .btn-link { font-size: 0.75rem; color: var(--text-dim); cursor: pointer; background:none; border:none; text-decoration: none; margin-left: 10px; transition: color 0.2s; }
-        .btn-link:hover { color: var(--accent-yellow); }
+        .btn-link { font-size: 0.75rem; color: var(--text-dim); cursor: pointer; background:none; border:none; margin-left: 10px; }
 
         .editor-wrapper { border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden; margin-top: 15px; }
         .CodeMirror { height: auto; min-height: 120px; font-size: 14px; }
@@ -81,75 +99,120 @@
         
         .run-btn { background: var(--accent-yellow); color: #000; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         
-        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; line-height: 1.5; }
+        .console { background: var(--console-bg); color: #4ade80; padding: 20px; font-family: 'Fira Code', monospace; display: none; border-top: 1px solid var(--border-light); font-size: 0.85rem; border-radius: 0 0 12px 12px; white-space: pre-wrap; }
 
-        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--toast-bg); color: white; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transform: translateY(100px); transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 1000; border: 1px solid var(--accent-yellow); }
+        #toast { position: fixed; bottom: 20px; right: 20px; background: var(--toast-bg); color: white; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transform: translateY(100px); transition: 0.3s; z-index: 3000; border: 1px solid var(--accent-yellow); }
         #toast.show { opacity: 1; transform: translateY(0); }
-
-        #status { font-size: 0.75rem; color: var(--text-dim); }
     </style>
 </head>
 <body data-theme="light">
 
-<div id="toast">Link copied! 🚀</div>
+<div id="versionModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h2 style="margin-top:0">v1.5.0 Release Notes</h2>
+        <ul style="color: var(--text-dim); line-height: 1.6; font-size: 0.9rem;">
+            <li><b>New Day:</b> Day 15 Added (Lambda Functions).</li>
+            <li><b>Persistence:</b> Full Day 1-15 logic restored in source code.</li>
+            <li><b>UX:</b> Modal popup for system updates.</li>
+        </ul>
+        <button class="run-btn" style="width:100%" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<div id="toast">Copied! 🚀</div>
 
 <div class="container">
     <div class="top-nav">
-        <div id="status">Loading Engine...</div>
+        <span class="version-pill" onclick="openModal()">v1.5.0 • What's New?</span>
         <button class="theme-toggle" onclick="toggleTheme()">🌓 TOGGLE THEME</button>
     </div>
 
     <div class="header">
         <h1>30 Days <span>Python</span></h1>
-        <p>Pro Series Dashboard by Pavanbhagi</p>
+        <p>Interactive Web-IDE Dashboard</p>
     </div>
 
     <div class="day-card">
         <div class="badge-row">
-            <span class="badge">Day 12: Design Patterns</span>
-            <div>
-                <button class="btn-link" onclick="copyRawCode('12')">📋 Copy</button>
-                <button class="btn-link" onclick="shareCode('12')">🔗 Share</button>
-            </div>
+            <span class="badge">Day 15: Functional</span>
+            <div><button class="btn-link" onclick="copyRawCode('15')">📋 Copy</button></div>
         </div>
-        <h2>Decorators (@)</h2>
-        <p>Wrap a function to add extra functionality dynamically.</p>
+        <h2>Lambda Functions</h2>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-15">
+# Anonymous one-line functions
+square = lambda x: x * x
+add = lambda a, b: a + b
+
+print(f"Square of 5: {square(5)}")
+print(f"Sum of 10 and 20: {add(10, 20)}")
+
+# Using with filter
+nums = [1, 2, 3, 4, 5, 6]
+evens = list(filter(lambda x: x % 2 == 0, nums))
+print(f"Evens: {evens}")</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('15')">Run Script</button></div>
+            <div class="console" id="output-15"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge-row"><span class="badge">Day 14: Data</span></div>
+        <h2>JSON Handling</h2>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-14">
+import json
+data = {"name": "Pavan", "status": "Coding"}
+print(json.dumps(data, indent=2))</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('14')">Run Script</button></div>
+            <div class="console" id="output-14"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge-row"><span class="badge">Day 13: Resources</span></div>
+        <h2>Context Managers</h2>
+        <div class="editor-wrapper">
+            <textarea class="py-editor" id="code-13">
+with open("test.txt", "w") as f: f.write("Context Manager Success")
+with open("test.txt", "r") as f: print(f.read())</textarea>
+            <div class="actions"><button class="run-btn" onclick="runCode('13')">Run Script</button></div>
+            <div class="console" id="output-13"></div>
+        </div>
+    </div>
+
+    <div class="day-card">
+        <div class="badge-row"><span class="badge">Day 12: Patterns</span></div>
+        <h2>Decorators</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-12">
-def log_action(func):
-    def wrapper():
-        print("--- Action Starting ---")
-        func()
-        print("--- Action Finished ---")
-    return wrapper
-
-@log_action
-def pavan_codes():
-    print("Writing Python logic...")
-
-pavan_codes()</textarea>
+def log(f):
+    def w(): print("Start"); f(); print("End")
+    return w
+@log
+def run(): print("Hello from Day 12")
+run()</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('12')">Run Script</button></div>
             <div class="console" id="output-12"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 11: Performance</span></div>
+        <div class="badge-row"><span class="badge">Day 11: Speed</span></div>
         <h2>Generators</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-11">
-def countdown(n):
-    while n > 0:
-        yield n
-        n -= 1
-for x in countdown(3): print(x)</textarea>
+def count(n):
+    while n > 0: yield n; n -= 1
+for x in count(3): print(x)</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('11')">Run Script</button></div>
             <div class="console" id="output-11"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 10: Logic</span></div>
+        <div class="badge-row"><span class="badge">Day 10: Efficiency</span></div>
         <h2>List Comprehension</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-10">
@@ -160,36 +223,37 @@ print([x**2 for x in range(5)])</textarea>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 09: Functions</span></div>
+        <div class="badge-row"><span class="badge">Day 09: Logic</span></div>
         <h2>Functions</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-09">
-def hi(name): return f"Hi {name}"
-print(hi("Pavan"))</textarea>
+def greet(name): return f"Hello, {name}"
+print(greet("Developer"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('09')">Run Script</button></div>
             <div class="console" id="output-09"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 08: Modules</span></div>
+        <div class="badge-row"><span class="badge">Day 08: Toolbox</span></div>
         <h2>Modules</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-08">
 import math
-print(math.pi)</textarea>
+print(math.sqrt(64))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('08')">Run Script</button></div>
             <div class="console" id="output-08"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <div class="badge-row"><span class="badge">Day 07: OOP</span></div>
-        <h2>Classes</h2>
+        <div class="badge-row"><span class="badge">Day 07: Architecture</span></div>
+        <h2>OOP Classes</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-07">
-class A: pass
-print("Class defined")</textarea>
+class Car:
+    def drive(self): print("Vroom!")
+Car().drive()</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('07')">Run Script</button></div>
             <div class="console" id="output-07"></div>
         </div>
@@ -197,61 +261,66 @@ print("Class defined")</textarea>
 
     <div class="day-card">
         <div class="badge-row"><span class="badge">Day 06: Files</span></div>
-        <h2>File Handling</h2>
+        <h2>File Reading</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-06">
-print("File I/O Demo")</textarea>
+print("Standard File I/O Logic")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('06')">Run Script</button></div>
             <div class="console" id="output-06"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 05: Errors</span>
+        <div class="badge-row"><span class="badge">Day 05: Safety</span></div>
+        <h2>Try/Except</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-05">
-try: 1/0
-except: print("Error handled")</textarea>
+try: print(10/0)
+except: print("Safe!")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('05')">Run Script</button></div>
             <div class="console" id="output-05"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 04: Dicts</span>
+        <div class="badge-row"><span class="badge">Day 04: Mapping</span></div>
+        <h2>Dictionaries</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-04">
-print({"a":1}.get("a"))</textarea>
+print({"key": "value"}.get("key"))</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('04')">Run Script</button></div>
             <div class="console" id="output-04"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 03: Lists</span>
+        <div class="badge-row"><span class="badge">Day 03: Arrays</span></div>
+        <h2>Lists</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-03">
-print([1,2,3])</textarea>
+print([1, 2, 3][0])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('03')">Run Script</button></div>
             <div class="console" id="output-03"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 02: Strings</span>
+        <div class="badge-row"><span class="badge">Day 02: Text</span></div>
+        <h2>Strings</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-02">
-print("Python"[::-1])</textarea>
+print("Python Reversed: " + "Python"[::-1])</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('02')">Run Script</button></div>
             <div class="console" id="output-02"></div>
         </div>
     </div>
 
     <div class="day-card">
-        <span class="badge">Day 01: Setup</span>
+        <div class="badge-row"><span class="badge">Day 01: Core</span></div>
+        <h2>Hello Python</h2>
         <div class="editor-wrapper">
             <textarea class="py-editor" id="code-01">
-print("Hello Pavan!")</textarea>
+print("Day 1: Ready to Code!")</textarea>
             <div class="actions"><button class="run-btn" onclick="runCode('01')">Run Script</button></div>
             <div class="console" id="output-01"></div>
         </div>
@@ -265,7 +334,7 @@ print("Hello Pavan!")</textarea>
 
     async function init() {
         pyodide = await loadPyodide();
-        document.getElementById('status').innerText = "Python Ready ⚡";
+        document.querySelector('.version-pill').innerText += " • Active";
         
         document.querySelectorAll('.py-editor').forEach(el => {
             const id = el.id.split('-')[1];
@@ -288,13 +357,16 @@ print("Hello Pavan!")</textarea>
     async function runCode(id) {
         const out = document.getElementById(`output-${id}`);
         out.style.display = "block";
-        out.innerText = "Running...";
+        out.innerText = "Executing...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
             out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
         } catch (e) { out.innerText = `⚠️ Error:\n${e.message}`; }
     }
+
+    function openModal() { document.getElementById('versionModal').style.display = 'block'; }
+    function closeModal() { document.getElementById('versionModal').style.display = 'none'; }
 
     function toggleTheme() {
         const newTheme = document.body.dataset.theme === "light" ? "dark" : "light";
@@ -305,8 +377,7 @@ print("Hello Pavan!")</textarea>
 
     function showToast(msg) {
         const t = document.getElementById("toast");
-        t.innerText = msg;
-        t.classList.add("show");
+        t.innerText = msg; t.classList.add("show");
         setTimeout(() => t.classList.remove("show"), 3000);
     }
 
@@ -326,9 +397,7 @@ print("Hello Pavan!")</textarea>
         const params = new URLSearchParams(window.location.search);
         const day = params.get('day');
         const code = params.get('code');
-        if (day && code && editors[day]) {
-            editors[day].setValue(atob(code));
-        }
+        if (day && code && editors[day]) editors[day].setValue(atob(code));
     }
 
     init();
