@@ -3,248 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Mastery | Pavanbhagi</title>
+    <title>Code Swiftly. | Pavanbhagi</title>
     
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/neo.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
 
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --accent: #FFD700;
-            --bg-main: #f5f5f7;
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
+            --apple-bg: #F5F5F7;
+            --apple-glass: rgba(255, 255, 255, 0.7);
+            --apple-border: rgba(0, 0, 0, 0.08);
+            --apple-text: #1D1D1F;
+            --apple-blue: #0071E3;
+            --apple-dim: #86868b;
         }
 
         [data-theme="dark"] {
-            --glass-bg: rgba(28, 28, 30, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --bg-main: #000000;
-            --text-primary: #f5f5f7;
-            --text-secondary: #a1a1a6;
+            --apple-bg: #000000;
+            --apple-glass: rgba(28, 28, 30, 0.85);
+            --apple-border: rgba(255, 255, 255, 0.12);
+            --apple-text: #F5F5F7;
         }
 
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
+            background-color: var(--apple-bg);
+            color: var(--apple-text);
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .app-container {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            max-width: 1400px;
-            margin: 0 auto;
-            gap: 40px;
-            padding: 40px;
+        /* Fixed Navigation Dock - Improved for Visibility */
+        .dock-wrapper {
+            position: fixed;
+            left: 20px;
+            top: 120px; /* Locked to top so you see #1 first */
+            bottom: 40px;
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
         }
 
-        /* Sidebar Navigation */
-        .sidebar {
-            position: sticky;
-            top: 40px;
-            height: calc(100vh - 80px);
+        .dock-container {
+            background: var(--apple-glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--apple-border);
+            border-radius: 22px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             overflow-y: auto;
-            padding-right: 10px;
+            max-height: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
         }
 
-        /* Hide scrollbar for sidebar */
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        /* Clean Scrollbar for Dock */
+        .dock-container::-webkit-scrollbar { width: 3px; }
+        .dock-container::-webkit-scrollbar-thumb { background: var(--apple-border); border-radius: 10px; }
 
-        .nav-list { list-style: none; padding: 0; margin: 20px 0; }
-        
-        .nav-item {
-            padding: 10px 16px;
-            margin-bottom: 4px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
+        .dock-icon {
+            width: 44px;
+            height: 44px;
+            min-height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0,0,0,0.03);
+            color: var(--apple-text);
         }
 
-        .nav-item:hover { background: var(--glass-bg); color: var(--text-primary); }
-        .nav-item.active { background: var(--accent); color: #000; font-weight: 700; }
+        .dock-icon:hover {
+            transform: scale(1.1);
+            background: var(--apple-blue);
+            color: white;
+        }
 
-        /* Content Cards */
-        .day-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+        .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        /* Roadmap Timeline Decoration */
+        .timeline-path {
+            position: fixed;
+            left: 110px; /* Between dock and content */
+            top: 0;
+            width: 1px;
+            height: 100vh;
+            background: linear-gradient(to bottom, transparent, var(--apple-border), transparent);
+            z-index: 1;
+        }
+
+        /* Content Layout */
+        .main-content { 
+            margin-left: 160px; /* Creating room for dock and timeline */
+            max-width: 800px; 
+            padding: 0 40px 100px; 
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero { padding: 100px 0 60px; text-align: left; }
+        .hero h1 { font-size: 4.5rem; font-weight: 800; margin: 0; letter-spacing: -0.04em; }
+        .hero h1 span { font-weight: 200; color: var(--apple-dim); }
+        .hero p { font-size: 1.4rem; color: var(--apple-dim); margin-top: 10px; }
+
+        .apple-card {
+            background: var(--apple-glass);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--apple-border);
+            border-radius: 30px;
             padding: 40px;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(30px);
         }
 
-        .badge { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
+        /* Module Context Label (Fills Side Space) */
+        .module-indicator {
+            position: absolute;
+            left: -140px;
+            width: 100px;
+            text-align: right;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--apple-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 10px;
+        }
 
         .editor-container {
-            border-radius: 16px;
+            margin-top: 25px;
+            border-radius: 18px;
             overflow: hidden;
-            margin-top: 20px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--apple-border);
             background: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
         }
 
-        .CodeMirror { height: auto; font-size: 14px; }
+        .CodeMirror { height: auto; font-family: "SF Mono", monospace; font-size: 14px; padding: 20px; }
 
-        .toolbar { display: flex; justify-content: flex-end; padding: 10px 20px; background: rgba(0,0,0,0.03); border-top: 1px solid var(--glass-border); }
+        .action-bar {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 20px;
+            background: rgba(0,0,0,0.01);
+            border-top: 1px solid var(--apple-border);
+        }
 
-        .run-btn { background: var(--accent); border: none; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .apple-btn {
+            background: var(--apple-text);
+            color: var(--apple-bg);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-        .console-box {
+        .apple-btn:hover { transform: scale(1.05); }
+
+        .terminal {
             background: #000;
-            color: #4ade80;
+            color: #fff;
             padding: 20px;
-            font-family: 'Fira Code', monospace;
+            border-radius: 0 0 18px 18px;
+            font-family: "SF Mono", monospace;
             display: none;
             font-size: 0.85rem;
         }
 
-        @media (max-width: 900px) {
-            .app-container { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
+        .theme-pill {
+            position: fixed;
+            top: 30px;
+            right: 40px;
+            background: var(--apple-glass);
+            border: 1px solid var(--apple-border);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 2000;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body data-theme="light">
 
-<div class="app-container">
-    <aside class="sidebar">
-        <h2 style="margin:0">Py<span>30</span></h2>
-        <div class="nav-list" id="sidebar-nav">
-            </div>
-        <button onclick="toggleTheme()" class="run-btn" style="width:100%; margin-top: 20px;">🌓 Theme</button>
-    </aside>
+<button class="theme-pill" onclick="toggleTheme()">Appearance</button>
 
-    <main class="content">
-        <div id="day-container">
-            </div>
-    </main>
+<div class="timeline-path"></div>
+
+<div class="dock-wrapper">
+    <nav class="dock-container" id="side-dock"></nav>
 </div>
 
+<main class="main-content">
+    <header class="hero">
+        <h1>Code <span>Swiftly.</span></h1>
+        <p>The Python Roadmap.</p>
+    </header>
+    
+    <div id="master-flow"></div>
+</main>
+
 <script>
-    const dayData = [
-        { id: 1, title: "Hello World", cat: "Basics", code: "print('Welcome to Python!')" },
-        { id: 2, title: "Variables & Strings", cat: "Basics", code: "name = 'Pavan'\nprint(f'Hello {name}')" },
-        { id: 3, title: "Lists", cat: "Data", code: "items = ['Code', 'Eat', 'Sleep']\nprint(items[0])" },
-        { id: 4, title: "Dictionaries", cat: "Data", code: "user = {'id': 1, 'role': 'Admin'}\nprint(user.get('role'))" },
-        { id: 5, title: "Error Handling", cat: "Logic", code: "try:\n    res = 10 / 0\nexcept Exception as e:\n    print(f'Error: {e}')" },
-        { id: 6, title: "File Operations", cat: "I/O", code: "print('File management system ready.')" },
-        { id: 7, title: "Classes & Objects", cat: "OOP", code: "class Dev:\n    def work(self): print('Coding...')\nDev().work()" },
-        { id: 8, title: "Modules", cat: "Tools", code: "import math\nprint(math.sqrt(64))" },
-        { id: 9, title: "Functions", cat: "Core", code: "def add(a, b): return a + b\nprint(add(5, 10))" },
-        { id: 10, title: "List Comprehension", cat: "Logic", code: "print([x*x for x in range(5)])" },
-        { id: 11, title: "Generators", cat: "Memory", code: "def g(): yield 'Ready'\nprint(next(g()))" },
-        { id: 12, title: "Decorators", cat: "Wrappers", code: "def bold(f):\n    return lambda: f'<b>{f()}</b>'\n@bold\ndef hi(): return 'Hi'\nprint(hi())" },
-        { id: 13, title: "Context Managers", cat: "Safety", code: "with open('t.txt', 'w') as f: f.write('OK')\nprint('Done')" },
-        { id: 14, title: "JSON Data", cat: "API", code: "import json\nprint(json.dumps({'status': 200}))" },
-        { id: 15, title: "Lambda Functions", cat: "Shortcuts", code: "mul = lambda x, y: x * y\nprint(mul(4, 5))" },
-        { id: 16, title: "Map & Filter", cat: "Data Science", code: "n = [1, 2, 3]\nprint(list(map(lambda x: x+1, n)))" },
-        { id: 17, title: "Regex", cat: "Patterns", code: "import re\nprint(re.findall(r'\\d+', 'Day 17'))" },
-        { id: 18, title: "Datetimes", cat: "Time", code: "from datetime import datetime\nprint(datetime.now())" },
-        { id: 19, title: "Web Scraping", cat: "Extraction", code: "html = '<h1>Title</h1>'\nprint(html[4:-5])" }
+    const pythonModules = [
+        { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')" },
+        { id: 2, name: "Data", code: "msg = 'Swift Learning'\nprint(msg.upper())" },
+        { id: 3, name: "Lists", code: "items = ['Code', 'Swiftly']\nprint(items[1])" },
+        { id: 4, name: "Maps", code: "d = {'day': 4}\nprint(f'Progress: {d}')" },
+        { id: 5, name: "Logic", code: "try:\n    print(10/0)\nexcept:\n    print('Safety First.')" },
+        { id: 6, name: "I/O", code: "print('Disk Access Ready.')" },
+        { id: 7, name: "Blueprint", code: "class Swift: pass\nprint('OOP Active')" },
+        { id: 8, name: "Standard", code: "import math\nprint(math.pi)" },
+        { id: 9, name: "Functions", code: "def run(): print('Fired')\nrun()" },
+        { id: 10, name: "Iterable", code: "print([x for x in range(3)])" },
+        { id: 11, name: "Yields", code: "def g(): yield 'OK'\nprint(next(g()))" },
+        { id: 12, name: "Wrappers", code: "print('Decorators Ready')" },
+        { id: 13, name: "Closure", code: "print('Cleanup Managed')" },
+        { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'id':1}))" },
+        { id: 15, name: "Lambdas", code: "f = lambda x: x*2\nprint(f(8))" },
+        { id: 16, name: "Filters", code: "print(list(map(str, [1,2])))" },
+        { id: 17, name: "Regex", code: "import re\nprint(re.search('S', 'Swift'))" },
+        { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
+        { id: 19, name: "Scraper", code: "print('Extraction engine live.')" }
     ];
 
     let pyodide;
     const editors = {};
 
-    async function init() {
+    async function start() {
         pyodide = await loadPyodide();
-        renderContent();
-        
-        // GSAP Stagger Entrance
-        gsap.to(".day-card", {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power2.out"
-        });
+        build();
+        gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power4.out" });
     }
 
-    function renderContent() {
-        const nav = document.getElementById('sidebar-nav');
-        const container = document.getElementById('day-container');
+    function build() {
+        const dock = document.getElementById('side-dock');
+        const flow = document.getElementById('master-flow');
 
-        dayData.reverse().forEach(day => {
-            // Sidebar Items
-            const navItem = document.createElement('div');
-            navItem.className = 'nav-item';
-            navItem.innerText = `Day ${day.id}: ${day.title}`;
-            navItem.onclick = () => scrollToDay(day.id, navItem);
-            nav.appendChild(navItem);
+        pythonModules.forEach(m => {
+            const icon = document.createElement('div');
+            icon.className = 'dock-icon';
+            icon.innerText = m.id;
+            icon.onclick = () => {
+                document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                document.querySelectorAll('.dock-icon').forEach(i => i.classList.remove('active'));
+                icon.classList.add('active');
+            };
+            dock.appendChild(icon);
 
-            // Day Cards
             const card = document.createElement('div');
-            card.className = 'day-card';
-            card.id = `day-${day.id}`;
+            card.className = 'apple-card';
+            card.id = `day-${m.id}`;
             card.innerHTML = `
-                <div style="display:flex; justify-content:space-between">
-                    <span class="badge">${day.cat}</span>
-                    <span style="color:var(--text-secondary); font-size:0.8rem">DAY ${day.id}</span>
-                </div>
-                <h2>${day.title}</h2>
+                <div class="module-indicator">Day ${m.id}</div>
+                <h2 style="margin:0; font-weight:700">${m.name}</h2>
                 <div class="editor-container">
-                    <textarea id="editor-${day.id}">${day.code}</textarea>
-                    <div class="toolbar">
-                        <button class="run-btn" onclick="runCode(${day.id})">Run Script</button>
+                    <textarea id="edit-${m.id}">${m.code}</textarea>
+                    <div class="action-bar">
+                        <button class="apple-btn" onclick="runCode(${m.id})">Execute</button>
                     </div>
-                    <div class="console-box" id="output-${day.id}"></div>
+                    <div class="terminal" id="term-${m.id}"></div>
                 </div>
             `;
-            container.appendChild(card);
+            flow.appendChild(card);
 
-            // Init CodeMirror for each
-            editors[day.id] = CodeMirror.fromTextArea(document.getElementById(`editor-${day.id}`), {
+            editors[m.id] = CodeMirror.fromTextArea(document.getElementById(`edit-${m.id}`), {
                 mode: "python",
-                theme: document.body.dataset.theme === "dark" ? "dracula" : "default",
-                lineNumbers: true,
-                indentUnit: 4
+                lineNumbers: false,
+                theme: "neo"
             });
         });
     }
 
-    function scrollToDay(id, element) {
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
-        document.getElementById(`day-${id}`).scrollIntoView({ behavior: 'smooth' });
-    }
-
     async function runCode(id) {
-        const out = document.getElementById(`output-${id}`);
-        out.style.display = "block";
-        out.innerText = "Running...";
+        const term = document.getElementById(`term-${id}`);
+        term.style.display = "block";
+        term.innerText = "Processing...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            out.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
-        } catch (e) {
-            out.innerText = `Error: ${e.message}`;
-        }
+            term.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
+        } catch (e) { term.innerText = e.message; }
     }
 
     function toggleTheme() {
-        const body = document.body;
-        body.dataset.theme = body.dataset.theme === "dark" ? "light" : "dark";
-        Object.values(editors).forEach(ed => {
-            ed.setOption("theme", body.dataset.theme === "dark" ? "dracula" : "default");
-        });
+        document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
     }
 
-    init();
+    start();
 </script>
 </body>
 </html>
