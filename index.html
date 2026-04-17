@@ -86,9 +86,9 @@
         }
 
         .dock-icon:hover { transform: scale(1.1); background: var(--apple-blue); color: white; }
-        .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); }
+        .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        /* Roadmap Decoration */
+        /* Roadmap Timeline */
         .timeline-path {
             position: fixed;
             left: 110px;
@@ -101,7 +101,7 @@
 
         /* Content Layout */
         .main-content { 
-            margin-left: 160px; 
+            margin-left: 160px;
             max-width: 800px; 
             padding: 0 40px 100px; 
             position: relative;
@@ -144,6 +144,7 @@
             overflow: hidden;
             border: 1px solid var(--apple-border);
             background: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
         }
 
         .CodeMirror { height: auto; font-family: "SF Mono", monospace; font-size: 14px; padding: 20px; }
@@ -179,6 +180,7 @@
             font-family: "SF Mono", monospace;
             display: none;
             font-size: 0.85rem;
+            border-top: 1px solid #333;
         }
 
         .theme-pill {
@@ -218,19 +220,26 @@
 <script>
     const pythonModules = [
         { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')" },
-        // ... (Days 2-19 from previous version) ...
-        { id: 20, name: "Virtual Environments", code: "# Simulation of venv & pip\n\ndef create_env(name):\n    print(f'Creating isolated bubble: {name}')\n    print('Installing core dependencies...')\n\ndef install_pkg(pkg):\n    print(f'Pip: Downloading {pkg}...')\n    print(f'Package {pkg} is now local to this project.')\n\ncreate_env('.venv')\ninstall_pkg('requests')" }
+        { id: 2, name: "Data", code: "msg = 'Swift Learning'\nprint(msg.upper())" },
+        { id: 3, name: "Lists", code: "items = ['Code', 'Swiftly']\nprint(items[1])" },
+        { id: 4, name: "Maps", code: "d = {'day': 4}\nprint(f'Progress: {d}')" },
+        { id: 5, name: "Logic", code: "try:\n    print(10/0)\nexcept:\n    print('Safety First.')" },
+        { id: 6, name: "I/O", code: "print('Disk Access Ready.')" },
+        { id: 7, name: "Blueprint", code: "class Swift: pass\nprint('OOP Active')" },
+        { id: 8, name: "Standard", code: "import math\nprint(math.pi)" },
+        { id: 9, name: "Functions", code: "def run(): print('Fired')\nrun()" },
+        { id: 10, name: "Iterable", code: "print([x for x in range(3)])" },
+        { id: 11, name: "Yields", code: "def g(): yield 'OK'\nprint(next(g()))" },
+        { id: 12, name: "Wrappers", code: "print('Decorators Ready')" },
+        { id: 13, name: "Closure", code: "print('Cleanup Managed')" },
+        { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'id':1}))" },
+        { id: 15, name: "Lambdas", code: "f = lambda x: x*2\nprint(f(8))" },
+        { id: 16, name: "Filters", code: "print(list(map(str, [1,2])))" },
+        { id: 17, name: "Regex", code: "import re\nprint(re.search('S', 'Swift'))" },
+        { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
+        { id: 19, name: "Scraper", code: "print('Extraction engine live.')" },
+        { id: 20, name: "Environments", code: "# Using Virtual Environments (venv)\nimport sys\n\ndef check_env():\n    is_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)\n    return 'Inside venv' if is_venv else 'Main System'\n\nprint(f'Environment Status: {check_env()}')\nprint('Isolated dependencies initialized.')" }
     ];
-
-    // For brevity in this response, I am only showing Day 20 logic here, 
-    // but in your file, ensure you keep the dayData array for 1-19 as well.
-    // I will dynamically populate 1-20 below.
-
-    const fullData = Array.from({length: 20}, (_, i) => {
-        const day = i + 1;
-        const base = pythonModules.find(m => m.id === day);
-        return base || { id: day, name: `Module ${day}`, code: `print('Day ${day} logic active.')` };
-    });
 
     let pyodide;
     const editors = {};
@@ -245,7 +254,7 @@
         const dock = document.getElementById('side-dock');
         const flow = document.getElementById('master-flow');
 
-        fullData.forEach(m => {
+        pythonModules.forEach(m => {
             const icon = document.createElement('div');
             icon.className = 'dock-icon';
             icon.innerText = m.id;
@@ -283,12 +292,20 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = ">>> Initializing System Environment...";
+        term.innerText = "System: Processing Script...";
+        
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            term.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
-        } catch (e) { term.innerText = e.message; }
+            const output = pyodide.runPython("sys.stdout.getvalue()");
+            term.innerText = output || "Process Finished (No Output).";
+            
+            // Subtle success flash
+            gsap.fromTo(term, {backgroundColor: "#1a1a1a"}, {backgroundColor: "#000", duration: 0.5});
+        } catch (e) { 
+            term.innerText = `Error: ${e.message}`; 
+            term.style.color = "#ff453a"; // Apple Red
+        }
     }
 
     function toggleTheme() {
