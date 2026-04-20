@@ -38,7 +38,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Fixed Navigation Dock */
+        /* Navigation Dock */
         .dock-wrapper {
             position: fixed;
             left: 20px;
@@ -88,7 +88,7 @@
         .dock-icon:hover { transform: scale(1.1); background: var(--apple-blue); color: white; }
         .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
-        /* Roadmap Timeline */
+        /* Timeline path decoration */
         .timeline-path {
             position: fixed;
             left: 110px;
@@ -99,7 +99,7 @@
             z-index: 1;
         }
 
-        /* Content Layout */
+        /* Layout */
         .main-content { 
             margin-left: 160px;
             max-width: 800px; 
@@ -180,7 +180,6 @@
             font-family: "SF Mono", monospace;
             display: none;
             font-size: 0.85rem;
-            border-top: 1px solid #333;
         }
 
         .theme-pill {
@@ -238,7 +237,8 @@
         { id: 17, name: "Regex", code: "import re\nprint(re.search('S', 'Swift'))" },
         { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
         { id: 19, name: "Scraper", code: "print('Extraction engine live.')" },
-        { id: 20, name: "Environments", code: "# Using Virtual Environments (venv)\nimport sys\n\ndef check_env():\n    is_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)\n    return 'Inside venv' if is_venv else 'Main System'\n\nprint(f'Environment Status: {check_env()}')\nprint('Isolated dependencies initialized.')" }
+        { id: 20, name: "Environments", code: "import sys\nprint('Checking venv status...')\nprint(f'System path: {sys.prefix}')" },
+        { id: 21, name: "Networking", code: "# Simulation of the 'requests' library\n\ndef fetch_api(endpoint):\n    print(f'GET --> {endpoint}')\n    return {'status': 200, 'data': 'Python Connection Established'}\n\nresponse = fetch_api('https://api.codeswiftly.io/v1')\nif response['status'] == 200:\n    print(f'Response Received: {response['data']}')" }
     ];
 
     let pyodide;
@@ -292,20 +292,12 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = "System: Processing Script...";
-        
+        term.innerText = "Processing Networking Request...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
-            const output = pyodide.runPython("sys.stdout.getvalue()");
-            term.innerText = output || "Process Finished (No Output).";
-            
-            // Subtle success flash
-            gsap.fromTo(term, {backgroundColor: "#1a1a1a"}, {backgroundColor: "#000", duration: 0.5});
-        } catch (e) { 
-            term.innerText = `Error: ${e.message}`; 
-            term.style.color = "#ff453a"; // Apple Red
-        }
+            term.innerText = pyodide.runPython("sys.stdout.getvalue()") || "Finished.";
+        } catch (e) { term.innerText = e.message; }
     }
 
     function toggleTheme() {
