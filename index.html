@@ -38,7 +38,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation Dock */
+        /* Fixed Navigation Dock */
         .dock-wrapper {
             position: fixed;
             left: 20px;
@@ -237,8 +237,9 @@
         { id: 17, name: "Regex", code: "import re\nprint(re.search('S', 'Swift'))" },
         { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
         { id: 19, name: "Scraper", code: "print('Extraction engine live.')" },
-        { id: 20, name: "Environments", code: "import sys\nprint('Checking venv status...')\nprint(f'System path: {sys.prefix}')" },
-        { id: 21, name: "Networking", code: "# Simulation of the 'requests' library\n\ndef fetch_api(endpoint):\n    print(f'GET --> {endpoint}')\n    return {'status': 200, 'data': 'Python Connection Established'}\n\nresponse = fetch_api('https://api.codeswiftly.io/v1')\nif response['status'] == 200:\n    print(f'Response Received: {response['data']}')" }
+        { id: 20, name: "Environments", code: "import sys\nprint(f'Venv Active: {sys.prefix}')" },
+        { id: 21, name: "Networking", code: "def get_data(url): return {'status': 200, 'msg': 'Connected'}\nprint(get_data('https://api.io'))" },
+        { id: 22, name: "Auth & Headers", code: "# Simulating secure headers\nheaders = {\n    'Authorization': 'Bearer swift_key_8892',\n    'Accept': 'application/json'\n}\n\ndef secure_request(url, auth_headers):\n    print(f'Connecting with token: {auth_headers['Authorization'][:10]}...')\n    return 'Access Granted: Data Loaded.'\n\nprint(secure_request('https://vault.api', headers))" }
     ];
 
     let pyodide;
@@ -292,7 +293,7 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = "Processing Networking Request...";
+        term.innerText = "Connecting to Secure Gateway...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
