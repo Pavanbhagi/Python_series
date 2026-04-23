@@ -38,7 +38,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Fixed Navigation Dock */
+        /* Navigation Dock */
         .dock-wrapper {
             position: fixed;
             left: 20px;
@@ -86,7 +86,7 @@
         }
 
         .dock-icon:hover { transform: scale(1.1); background: var(--apple-blue); color: white; }
-        .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); }
 
         /* Timeline path decoration */
         .timeline-path {
@@ -144,7 +144,6 @@
             overflow: hidden;
             border: 1px solid var(--apple-border);
             background: #fff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
         }
 
         .CodeMirror { height: auto; font-family: "SF Mono", monospace; font-size: 14px; padding: 20px; }
@@ -237,9 +236,10 @@
         { id: 17, name: "Regex", code: "import re\nprint(re.search('S', 'Swift'))" },
         { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
         { id: 19, name: "Scraper", code: "print('Extraction engine live.')" },
-        { id: 20, name: "Environments", code: "import sys\nprint(f'Venv Active: {sys.prefix}')" },
-        { id: 21, name: "Networking", code: "def get_data(url): return {'status': 200, 'msg': 'Connected'}\nprint(get_data('https://api.io'))" },
-        { id: 22, name: "Auth & Headers", code: "# Simulating secure headers\nheaders = {\n    'Authorization': 'Bearer swift_key_8892',\n    'Accept': 'application/json'\n}\n\ndef secure_request(url, auth_headers):\n    print(f'Connecting with token: {auth_headers['Authorization'][:10]}...')\n    return 'Access Granted: Data Loaded.'\n\nprint(secure_request('https://vault.api', headers))" }
+        { id: 20, name: "Environments", code: "import sys\nprint(f'Venv: {sys.prefix}')" },
+        { id: 21, name: "Networking", code: "print('GET Request Ready.')" },
+        { id: 22, name: "Auth", code: "print('Headers & Bearer Tokens active.')" },
+        { id: 23, name: "POST Payloads", code: "import json\n\n# Creating the data package\nuser_data = {\n    'username': 'Pavanbhagi',\n    'status': 'Online',\n    'level': 23\n}\n\ndef post_data(payload):\n    print('POSTing to server...')\n    json_package = json.dumps(payload)\n    print(f'Payload Sent: {json_package}')\n    return 'Success: 201 Created'\n\nprint(post_data(user_data))" }
     ];
 
     let pyodide;
@@ -293,7 +293,7 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = "Connecting to Secure Gateway...";
+        term.innerText = "Processing...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
