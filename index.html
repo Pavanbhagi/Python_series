@@ -88,7 +88,6 @@
         .dock-icon:hover { transform: scale(1.1); background: var(--apple-blue); color: white; }
         .dock-icon.active { background: var(--apple-text); color: var(--apple-bg); }
 
-        /* Timeline path decoration */
         .timeline-path {
             position: fixed;
             left: 110px;
@@ -99,7 +98,6 @@
             z-index: 1;
         }
 
-        /* Layout */
         .main-content { 
             margin-left: 160px;
             max-width: 800px; 
@@ -239,7 +237,8 @@
         { id: 20, name: "Environments", code: "import sys\nprint(f'Venv: {sys.prefix}')" },
         { id: 21, name: "Networking", code: "print('GET Request Ready.')" },
         { id: 22, name: "Auth", code: "print('Headers & Bearer Tokens active.')" },
-        { id: 23, name: "POST Payloads", code: "import json\n\n# Creating the data package\nuser_data = {\n    'username': 'Pavanbhagi',\n    'status': 'Online',\n    'level': 23\n}\n\ndef post_data(payload):\n    print('POSTing to server...')\n    json_package = json.dumps(payload)\n    print(f'Payload Sent: {json_package}')\n    return 'Success: 201 Created'\n\nprint(post_data(user_data))" }
+        { id: 23, name: "POST Payloads", code: "print('Data Packaged and Sent.')" },
+        { id: 24, name: "Resilience", code: "import time\n\ndef fetch_with_retry(url, retries=3):\n    for i in range(retries):\n        try:\n            print(f'Attempt {i+1}: Connecting...')\n            # Simulating a timeout error\n            if i < 2: raise ConnectionError('Timeout') \n            return 'Success: Data Fetched'\n        except Exception as e:\n            print(f'Warning: {e}. Retrying...')\n            time.sleep(0.1)\n    return 'Error: Site Unreachable'\n\nprint(fetch_with_retry('https://api.codeswiftly.io'))" }
     ];
 
     let pyodide;
@@ -293,7 +292,7 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = "Processing...";
+        term.innerText = "System: Initializing Resilient Protocol...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
