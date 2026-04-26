@@ -7,6 +7,7 @@
     
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/neo.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
@@ -40,6 +41,7 @@
             transition: background 0.5s ease;
         }
 
+        /* Sidebar Dock */
         .dock-wrapper {
             position: fixed;
             left: 20px;
@@ -55,7 +57,6 @@
         .dock-container {
             background: var(--apple-glass);
             backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--apple-border);
             border-radius: 22px;
             padding: 10px;
@@ -79,12 +80,12 @@
             font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(0,0,0,0.03);
             color: var(--apple-text);
         }
 
-        .dock-icon:hover { transform: scale(1.15); background: var(--apple-blue); color: white; }
+        .dock-icon:hover { transform: scale(1.2) translateY(-5px); background: var(--apple-blue); color: white; }
 
         .main-content { 
             margin-left: 160px;
@@ -92,6 +93,7 @@
             padding: 0 40px 100px; 
         }
 
+        /* Apple Cards */
         .apple-card {
             background: var(--apple-glass);
             backdrop-filter: blur(40px);
@@ -173,40 +175,40 @@
 
 <main class="main-content">
     <header style="padding: 100px 0 60px;">
-        <h1 style="font-size: 4rem; margin: 0; letter-spacing: -2px;">Code Swiftly.</h1>
-        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Initializing Python Engine...</p>
+        <h1 style="font-size: 4.5rem; margin: 0; letter-spacing: -3px; font-weight: 700;">Code Swiftly.</h1>
+        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Wasm Python Engine initializing...</p>
     </header>
     <div id="master-flow"></div>
 </main>
 
 <script>
     const pythonModules = [
-        { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')\nprint('Python is ready to run in your browser.')" },
-        { id: 2, name: "Data", code: "name = 'Swift'\nversion = 3.0\nprint(f'{name} environment version: {version}')" },
-        { id: 3, name: "Lists", code: "items = ['Clean Code', 'Performance', 'UX']\nitems.append('Wasm')\nprint(f'Core pillars: {items}')" },
-        { id: 4, name: "Maps", code: "d = {'module': 4, 'status': 'active'}\nprint(f'Progress: {d}')" },
+        { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')\nprint('Python is running natively in your browser.')" },
+        { id: 2, name: "Data", code: "name = 'Swift'\nversion = 3.0\nprint(f'{name} v{version} active.')" },
+        { id: 3, name: "Lists", code: "items = ['Clean Code', 'Wasm', 'UX']\nitems.append('GSAP')\nprint(f'Tech Stack: {items}')" },
+        { id: 4, name: "Maps", code: "d = {'day': 4, 'status': 'learning'}\nprint(f'Progress: {d}')" },
         { id: 5, name: "Logic", code: "try:\n    print(10/0)\nexcept ZeroDivisionError:\n    print('Safety protocols active.')" },
-        { id: 6, name: "I/O", code: "print('Simulating file system access...')\nprint('Data stream secured.')" },
-        { id: 7, name: "Blueprint", code: "class SwiftDev:\n    def __init__(self): self.skill = 'High'\n\nprint(f'Developer Skill: {SwiftDev().skill}')" },
-        { id: 8, name: "Standard", code: "import math\nprint(f'Calculating PI: {math.pi}')" },
-        { id: 9, name: "Functions", code: "def fire(): return 'Code Executed.'\nprint(fire())" },
+        { id: 6, name: "I/O", code: "print('Simulating file system access...')\nprint('Buffer stream secured.')" },
+        { id: 7, name: "Blueprint", code: "class Dev:\n    def __init__(self): self.level = 'Senior'\n\nprint(f'Skill Level: {Dev().level}')" },
+        { id: 8, name: "Math", code: "import math\nprint(f'PI Calculation: {math.pi}')" },
+        { id: 9, name: "Functions", code: "def run(): return 'Success'\nprint(run())" },
         { id: 10, name: "Iterable", code: "print([x*x for x in range(5)])" },
-        { id: 11, name: "Yields", code: "def generator():\n    yield 'Step 1'\n    yield 'Step 2'\n\ng = generator()\nprint(next(g))" },
-        { id: 12, name: "Wrappers", code: "def debug(f):\n    return lambda: f'Running: {f()}'\n@debug\ndef app(): return 'SwiftIDE'\nprint(app())" },
-        { id: 13, name: "Closure", code: "def outer(n):\n    def inner(): return n + 1\n    return inner\nprint(outer(25)())" },
-        { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'engine': 'Wasm', 'day': 14}))" },
-        { id: 15, name: "Lambdas", code: "f = lambda x: x ** 2\nprint(f'Square of 8 is: {f(8)}')" },
-        { id: 16, name: "Filters", code: "nums = [1, 2, 3, 4, 5, 6]\nprint(list(filter(lambda x: x % 2 == 0, nums)))" },
+        { id: 11, name: "Yields", code: "def g():\n    yield 'A'\n    yield 'B'\nprint(next(g()))" },
+        { id: 12, name: "Wrappers", code: "def dec(f): return lambda: f'[{f()}]'\n@dec\ndef app(): return 'Swift'\nprint(app())" },
+        { id: 13, name: "Closure", code: "def outer(n):\n    return lambda: n + 1\nprint(outer(25)())" },
+        { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'engine': 'Wasm'}))" },
+        { id: 15, name: "Lambdas", code: "f = lambda x: x**2\nprint(f(8))" },
+        { id: 16, name: "Filters", code: "nums = [1, 2, 3, 4, 5]\nprint(list(filter(lambda x: x > 3, nums)))" },
         { id: 17, name: "Regex", code: "import re\nprint(re.search('Swift', 'Code Swiftly').group())" },
-        { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(f'Current time: {datetime.now()}')" },
-        { id: 19, name: "Scraper", code: "print('Extraction engine live. Scraping simulated...')\nprint('Status: 200 OK')" },
-        { id: 20, name: "Environments", code: "import sys\nprint(f'Python Prefix: {sys.prefix}')" },
-        { id: 21, name: "Networking", code: "print('Simulating GET Request to API...')\nprint('Payload Received.')" },
-        { id: 22, name: "Auth", code: "print('Bearer Token validation active.')\nprint('Access Granted.')" },
-        { id: 23, name: "POST Payloads", code: "print('Transmitting data packets...')\nprint('Sync complete.')" },
-        { id: 24, name: "Resilience", code: "for i in range(3):\n    print(f'Retrying connection... {i+1}')" },
-        { id: 25, name: "Asynchrony", code: "import asyncio\nasync def task():\n    print('Fetch started...')\n    await asyncio.sleep(0.5)\n    print('Fetch complete.')\n\nimport pyodide_js\nawait task()" },
-        { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x**2 for x in range(10000)]\nprint(f'Module Benchmark: {time.time()-start:.6f}s')\nprint('Roadmap 100% Complete.')" }
+        { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
+        { id: 19, name: "Scraper", code: "print('Extraction live...')\nprint('Status: 200 OK')" },
+        { id: 20, name: "System", code: "import sys\nprint(sys.version)" },
+        { id: 21, name: "Networking", code: "print('GET Request Ready.')" },
+        { id: 22, name: "Auth", code: "print('Bearer Token active.')" },
+        { id: 23, name: "POST", code: "print('Data Transmitted.')" },
+        { id: 24, name: "Resilience", code: "print('Retry logic ready.')" },
+        { id: 25, name: "Asynchrony", code: "import asyncio\n\nasync def fetch():\n    print('Task started...')\n    await asyncio.sleep(0.5)\n    print('Task finished.')\n\n# Pyodide special execution\nimport pyodide_js\nawait fetch()" },
+        { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Benchmark: {time.time()-start:.6f}s')\nprint('Roadmap Complete.')" }
     ];
 
     let pyodide;
@@ -215,11 +217,11 @@
     async function start() {
         try {
             pyodide = await loadPyodide();
-            document.getElementById('engine-status').innerText = "Python 3.11 Engine (Wasm) Live.";
+            document.getElementById('engine-status').innerText = "Python 3.11 (WebAssembly) Engine Live.";
             build();
-            gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "power4.out" });
+            gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "expo.out" });
         } catch (e) {
-            document.getElementById('engine-status').innerText = "Engine Error: " + e.message;
+            document.getElementById('engine-status').innerText = "Engine Load Failed.";
         }
     }
 
@@ -228,14 +230,12 @@
         const flow = document.getElementById('master-flow');
 
         pythonModules.forEach(m => {
-            // Dock Icon
             const icon = document.createElement('div');
             icon.className = 'dock-icon';
             icon.innerText = m.id;
             icon.onclick = () => document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
             dock.appendChild(icon);
 
-            // Card
             const card = document.createElement('div');
             card.className = 'apple-card';
             card.id = `day-${m.id}`;
@@ -244,20 +244,18 @@
                 <h2 style="margin:0; font-weight: 600;">${m.name}</h2>
                 <div class="editor-container">
                     <textarea id="edit-${m.id}">${m.code}</textarea>
-                    <div style="padding: 15px; background: var(--apple-glass); border-top: 1px solid var(--apple-border); text-align: right;">
-                        <button class="apple-btn" onclick="runCode(${m.id})">Run Script</button>
+                    <div style="padding: 15px; border-top: 1px solid var(--apple-border); text-align: right;">
+                        <button class="apple-btn" onclick="runCode(${m.id})">Execute</button>
                     </div>
                     <div class="terminal" id="term-${m.id}"></div>
                 </div>
             `;
             flow.appendChild(card);
             
-            // Initialize CodeMirror for this card
             editors[m.id] = CodeMirror.fromTextArea(document.getElementById(`edit-${m.id}`), {
                 mode: "python",
                 theme: "neo",
                 lineNumbers: false,
-                indentUnit: 4,
                 autoCloseBrackets: true
             });
         });
@@ -266,41 +264,31 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = ">>> Running in WebAssembly...";
+        term.innerText = "Running...";
         
         try {
-            // Setup output redirection
-            await pyodide.runPythonAsync(`
-import sys
-import io
-sys.stdout = io.StringIO()
-            `);
-            
-            const userCode = editors[id].getValue();
-            await pyodide.runPythonAsync(userCode);
-            
+            await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
+            const code = editors[id].getValue();
+            await pyodide.runPythonAsync(code);
             const output = pyodide.runPython("sys.stdout.getvalue()");
-            term.innerText = output || "Process finished with no output.";
+            term.innerText = output || "Process complete.";
             term.style.color = "#50fa7b";
         } catch (e) {
-            term.innerText = "Traceback (most recent call last):\n" + e.message;
+            term.innerText = "Error: " + e.message;
             term.style.color = "#ff5555";
         }
     }
 
     function toggleTheme() {
         const body = document.body;
-        const currentTheme = body.dataset.theme;
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        body.dataset.theme = newTheme;
-        
-        // Update CodeMirror themes
-        const cmTheme = newTheme === "dark" ? "dracula" : "neo";
-        Object.values(editors).forEach(ed => ed.setOption("theme", cmTheme));
+        const current = body.dataset.theme;
+        const next = current === "dark" ? "light" : "dark";
+        body.dataset.theme = next;
+        const theme = next === "dark" ? "dracula" : "neo";
+        Object.values(editors).forEach(ed => ed.setOption("theme", theme));
     }
 
     start();
 </script>
-
 </body>
 </html>
