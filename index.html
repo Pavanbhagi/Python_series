@@ -41,6 +41,23 @@
             transition: background 0.5s ease;
         }
 
+        /* Progress Bar */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.05);
+            z-index: 2001;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--apple-blue);
+            transition: width 0.3s ease;
+        }
+
         /* Sidebar Dock */
         .dock-wrapper {
             position: fixed;
@@ -84,8 +101,8 @@
             background: rgba(0,0,0,0.03);
             color: var(--apple-text);
         }
-
-        .dock-icon:hover { transform: scale(1.2) translateY(-5px); background: var(--apple-blue); color: white; }
+        .dock-icon:hover { transform: scale(1.2); background: var(--apple-blue); color: white; }
+        .dock-icon.completed { border: 2px solid var(--apple-blue); }
 
         .main-content { 
             margin-left: 160px;
@@ -93,7 +110,6 @@
             padding: 0 40px 100px; 
         }
 
-        /* Apple Cards */
         .apple-card {
             background: var(--apple-glass);
             backdrop-filter: blur(40px);
@@ -167,6 +183,7 @@
 </head>
 <body data-theme="light">
 
+<div id="progress-container"><div id="progress-bar"></div></div>
 <button class="theme-pill" onclick="toggleTheme()">Appearance</button>
 
 <div class="dock-wrapper">
@@ -176,7 +193,7 @@
 <main class="main-content">
     <header style="padding: 100px 0 60px;">
         <h1 style="font-size: 4.5rem; margin: 0; letter-spacing: -3px; font-weight: 700;">Code Swiftly.</h1>
-        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Wasm Python Engine initializing...</p>
+        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Wasm Engine: Initializing...</p>
     </header>
     <div id="master-flow"></div>
 </main>
@@ -207,21 +224,22 @@
         { id: 22, name: "Auth", code: "print('Bearer Token active.')" },
         { id: 23, name: "POST", code: "print('Data Transmitted.')" },
         { id: 24, name: "Resilience", code: "print('Retry logic ready.')" },
-        { id: 25, name: "Asynchrony", code: "import asyncio\n\nasync def fetch():\n    print('Task started...')\n    await asyncio.sleep(0.5)\n    print('Task finished.')\n\n# Pyodide special execution\nimport pyodide_js\nawait fetch()" },
-        { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Benchmark: {time.time()-start:.6f}s')\nprint('Roadmap Complete.')" }
+        { id: 25, name: "Asynchrony", code: "import asyncio\nasync def fetch():\n    print('Async task started...')\n    await asyncio.sleep(0.5)\n    print('Task finished.')\nimport pyodide_js\nawait fetch()" },
+        { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Benchmark: {time.time()-start:.6f}s')\nprint('Final Module Complete.')" }
     ];
 
     let pyodide;
     const editors = {};
+    const completedModules = new Set();
 
     async function start() {
         try {
             pyodide = await loadPyodide();
-            document.getElementById('engine-status').innerText = "Python 3.11 (WebAssembly) Engine Live.";
+            document.getElementById('engine-status').innerText = "Python 3.11 Engine (Wasm) Live.";
             build();
             gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "expo.out" });
         } catch (e) {
-            document.getElementById('engine-status').innerText = "Engine Load Failed.";
+            document.getElementById('engine-status').innerText = "Engine Error.";
         }
     }
 
@@ -232,6 +250,7 @@
         pythonModules.forEach(m => {
             const icon = document.createElement('div');
             icon.className = 'dock-icon';
+            icon.id = `icon-${m.id}`;
             icon.innerText = m.id;
             icon.onclick = () => document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
             dock.appendChild(icon);
@@ -268,15 +287,24 @@
         
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
-            const code = editors[id].getValue();
-            await pyodide.runPythonAsync(code);
+            await pyodide.runPythonAsync(editors[id].getValue());
             const output = pyodide.runPython("sys.stdout.getvalue()");
-            term.innerText = output || "Process complete.";
+            term.innerText = output || "Done.";
             term.style.color = "#50fa7b";
+
+            // Mark as complete
+            completedModules.add(id);
+            document.getElementById(`icon-${id}`).classList.add('completed');
+            updateProgress();
         } catch (e) {
             term.innerText = "Error: " + e.message;
             term.style.color = "#ff5555";
         }
+    }
+
+    function updateProgress() {
+        const percent = (completedModules.size / pythonModules.length) * 100;
+        document.getElementById('progress-bar').style.width = percent + "%";
     }
 
     function toggleTheme() {
@@ -292,3 +320,8 @@
 </script>
 </body>
 </html>
+
+
+
+
+
