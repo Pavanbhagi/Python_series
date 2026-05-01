@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Swiftly. | Pavanbhagi</title>
-    
+
     <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/neo.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
@@ -48,9 +49,10 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
             z-index: 2001;
         }
+
         #progress-bar {
             width: 0%;
             height: 100%;
@@ -84,7 +86,10 @@
             max-height: 100%;
             scrollbar-width: none;
         }
-        .dock-container::-webkit-scrollbar { display: none; }
+
+        .dock-container::-webkit-scrollbar {
+            display: none;
+        }
 
         .dock-icon {
             width: 44px;
@@ -98,16 +103,24 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(0,0,0,0.03);
+            background: rgba(0, 0, 0, 0.03);
             color: var(--apple-text);
         }
-        .dock-icon:hover { transform: scale(1.2); background: var(--apple-blue); color: white; }
-        .dock-icon.completed { border: 2px solid var(--apple-blue); }
 
-        .main-content { 
+        .dock-icon:hover {
+            transform: scale(1.2);
+            background: var(--apple-blue);
+            color: white;
+        }
+
+        .dock-icon.completed {
+            border: 2px solid var(--apple-blue);
+        }
+
+        .main-content {
             margin-left: 160px;
-            max-width: 800px; 
-            padding: 0 40px 100px; 
+            max-width: 800px;
+            padding: 0 40px 100px;
         }
 
         .apple-card {
@@ -142,7 +155,12 @@
             background: #fff;
         }
 
-        .CodeMirror { height: auto; font-family: "SF Mono", monospace; font-size: 14px; padding: 20px; }
+        .CodeMirror {
+            height: auto;
+            font-family: "SF Mono", monospace;
+            font-size: 14px;
+            padding: 20px;
+        }
 
         .apple-btn {
             background: var(--apple-text);
@@ -154,7 +172,11 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .apple-btn:hover { opacity: 0.8; transform: scale(1.02); }
+
+        .apple-btn:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
 
         .terminal {
             background: #000;
@@ -179,86 +201,115 @@
             z-index: 2000;
             font-weight: 500;
         }
+
+        .pulse-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #34c759;
+            /* Apple Green */
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 0 rgba(52, 199, 89, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(52, 199, 89, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
+            }
+        }
     </style>
 </head>
+
 <body data-theme="light">
 
-<div id="progress-container"><div id="progress-bar"></div></div>
-<button class="theme-pill" onclick="toggleTheme()">Appearance</button>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <button class="theme-pill" onclick="toggleTheme()">Appearance</button>
 
-<div class="dock-wrapper">
-    <nav class="dock-container" id="side-dock"></nav>
-</div>
+    <div class="dock-wrapper">
+        <nav class="dock-container" id="side-dock"></nav>
+    </div>
 
-<main class="main-content">
-    <header style="padding: 100px 0 60px;">
-        <h1 style="font-size: 4.5rem; margin: 0; letter-spacing: -3px; font-weight: 700;">Code Swiftly.</h1>
-        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Wasm Engine: Initializing...</p>
-    </header>
-    <div id="master-flow"></div>
-</main>
+    <main class="main-content">
+        <header style="padding: 100px 0 60px;">
+            <h1 style="font-size: 4.5rem; margin: 0; letter-spacing: -3px; font-weight: 700;">Code Swiftly.</h1>
+            <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem;">Wasm Engine: Initializing...</p>
+        </header>
+        <div id="master-flow"></div>
+    </main>
 
-<script>
-    const pythonModules = [
-        { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')\nprint('Python is running natively in your browser.')" },
-        { id: 2, name: "Data", code: "name = 'Swift'\nversion = 3.0\nprint(f'{name} v{version} active.')" },
-        { id: 3, name: "Lists", code: "items = ['Clean Code', 'Wasm', 'UX']\nitems.append('GSAP')\nprint(f'Tech Stack: {items}')" },
-        { id: 4, name: "Maps", code: "d = {'day': 4, 'status': 'learning'}\nprint(f'Progress: {d}')" },
-        { id: 5, name: "Logic", code: "try:\n    print(10/0)\nexcept ZeroDivisionError:\n    print('Safety protocols active.')" },
-        { id: 6, name: "I/O", code: "print('Simulating file system access...')\nprint('Buffer stream secured.')" },
-        { id: 7, name: "Blueprint", code: "class Dev:\n    def __init__(self): self.level = 'Senior'\n\nprint(f'Skill Level: {Dev().level}')" },
-        { id: 8, name: "Math", code: "import math\nprint(f'PI Calculation: {math.pi}')" },
-        { id: 9, name: "Functions", code: "def run(): return 'Success'\nprint(run())" },
-        { id: 10, name: "Iterable", code: "print([x*x for x in range(5)])" },
-        { id: 11, name: "Yields", code: "def g():\n    yield 'A'\n    yield 'B'\nprint(next(g()))" },
-        { id: 12, name: "Wrappers", code: "def dec(f): return lambda: f'[{f()}]'\n@dec\ndef app(): return 'Swift'\nprint(app())" },
-        { id: 13, name: "Closure", code: "def outer(n):\n    return lambda: n + 1\nprint(outer(25)())" },
-        { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'engine': 'Wasm'}))" },
-        { id: 15, name: "Lambdas", code: "f = lambda x: x**2\nprint(f(8))" },
-        { id: 16, name: "Filters", code: "nums = [1, 2, 3, 4, 5]\nprint(list(filter(lambda x: x > 3, nums)))" },
-        { id: 17, name: "Regex", code: "import re\nprint(re.search('Swift', 'Code Swiftly').group())" },
-        { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
-        { id: 19, name: "Scraper", code: "print('Extraction live...')\nprint('Status: 200 OK')" },
-        { id: 20, name: "System", code: "import sys\nprint(sys.version)" },
-        { id: 21, name: "Networking", code: "print('GET Request Ready.')" },
-        { id: 22, name: "Auth", code: "print('Bearer Token active.')" },
-        { id: 23, name: "POST", code: "print('Data Transmitted.')" },
-        { id: 24, name: "Resilience", code: "print('Retry logic ready.')" },
-        { id: 25, name: "Asynchrony", code: "import asyncio\nasync def fetch():\n    print('Async task started...')\n    await asyncio.sleep(0.5)\n    print('Task finished.')\nimport pyodide_js\nawait fetch()" },
-        { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Benchmark: {time.time()-start:.6f}s')\nprint('Final Module Complete.')" }
-    ];
+    <script>
+        const pythonModules = [
+            { id: 1, name: "Intro", code: "print('Welcome to Code Swiftly.')\nprint('Python is running natively in your browser.')" },
+            { id: 2, name: "Data", code: "name = 'Swift'\nversion = 3.0\nprint(f'{name} v{version} active.')" },
+            { id: 3, name: "Lists", code: "items = ['Clean Code', 'Wasm', 'UX']\nitems.append('GSAP')\nprint(f'Tech Stack: {items}')" },
+            { id: 4, name: "Maps", code: "d = {'day': 4, 'status': 'learning'}\nprint(f'Progress: {d}')" },
+            { id: 5, name: "Logic", code: "try:\n    print(10/0)\nexcept ZeroDivisionError:\n    print('Safety protocols active.')" },
+            { id: 6, name: "I/O", code: "print('Simulating file system access...')\nprint('Buffer stream secured.')" },
+            { id: 7, name: "Blueprint", code: "class Dev:\n    def __init__(self): self.level = 'Senior'\n\nprint(f'Skill Level: {Dev().level}')" },
+            { id: 8, name: "Math", code: "import math\nprint(f'PI Calculation: {math.pi}')" },
+            { id: 9, name: "Functions", code: "def run(): return 'Success'\nprint(run())" },
+            { id: 10, name: "Iterable", code: "print([x*x for x in range(5)])" },
+            { id: 11, name: "Yields", code: "def g():\n    yield 'A'\n    yield 'B'\nprint(next(g()))" },
+            { id: 12, name: "Wrappers", code: "def dec(f): return lambda: f'[{f()}]'\n@dec\ndef app(): return 'Swift'\nprint(app())" },
+            { id: 13, name: "Closure", code: "def outer(n):\n    return lambda: n + 1\nprint(outer(25)())" },
+            { id: 14, name: "Web Data", code: "import json\nprint(json.dumps({'engine': 'Wasm'}))" },
+            { id: 15, name: "Lambdas", code: "f = lambda x: x**2\nprint(f(8))" },
+            { id: 16, name: "Filters", code: "nums = [1, 2, 3, 4, 5]\nprint(list(filter(lambda x: x > 3, nums)))" },
+            { id: 17, name: "Regex", code: "import re\nprint(re.search('Swift', 'Code Swiftly').group())" },
+            { id: 18, name: "Temporal", code: "from datetime import datetime\nprint(datetime.now())" },
+            { id: 19, name: "Scraper", code: "print('Extraction live...')\nprint('Status: 200 OK')" },
+            { id: 20, name: "System", code: "import sys\nprint(sys.version)" },
+            { id: 21, name: "Networking", code: "print('GET Request Ready.')" },
+            { id: 22, name: "Auth", code: "print('Bearer Token active.')" },
+            { id: 23, name: "POST", code: "print('Data Transmitted.')" },
+            { id: 24, name: "Resilience", code: "print('Retry logic ready.')" },
+            { id: 25, name: "Asynchrony", code: "import asyncio\nasync def fetch():\n    print('Async task started...')\n    await asyncio.sleep(0.5)\n    print('Task finished.')\nimport pyodide_js\nawait fetch()" },
+            { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Benchmark: {time.time()-start:.6f}s')\nprint('Final Module Complete.')" }
+        ];
 
-    let pyodide;
-    const editors = {};
-    const completedModules = new Set();
+        let pyodide;
+        const editors = {};
+        const completedModules = new Set();
 
-    async function start() {
-        try {
-            pyodide = await loadPyodide();
-            document.getElementById('engine-status').innerText = "Python 3.11 Engine (Wasm) Live.";
-            build();
-            gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "expo.out" });
-        } catch (e) {
-            document.getElementById('engine-status').innerText = "Engine Error.";
+        async function start() {
+            try {
+                pyodide = await loadPyodide();
+                document.getElementById('engine-status').innerText = "Python 3.11 Engine (Wasm) Live.";
+                build();
+                gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1, stagger: 0.1, ease: "expo.out" });
+            } catch (e) {
+                document.getElementById('engine-status').innerText = "Engine Error.";
+            }
         }
-    }
 
-    function build() {
-        const dock = document.getElementById('side-dock');
-        const flow = document.getElementById('master-flow');
+        function build() {
+            const dock = document.getElementById('side-dock');
+            const flow = document.getElementById('master-flow');
 
-        pythonModules.forEach(m => {
-            const icon = document.createElement('div');
-            icon.className = 'dock-icon';
-            icon.id = `icon-${m.id}`;
-            icon.innerText = m.id;
-            icon.onclick = () => document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-            dock.appendChild(icon);
+            pythonModules.forEach(m => {
+                const icon = document.createElement('div');
+                icon.className = 'dock-icon';
+                icon.id = `icon-${m.id}`;
+                icon.innerText = m.id;
+                icon.onclick = () => document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                dock.appendChild(icon);
 
-            const card = document.createElement('div');
-            card.className = 'apple-card';
-            card.id = `day-${m.id}`;
-            card.innerHTML = `
+                const card = document.createElement('div');
+                card.className = 'apple-card';
+                card.id = `day-${m.id}`;
+                card.innerHTML = `
                 <div class="module-indicator">Day ${m.id}</div>
                 <h2 style="margin:0; font-weight: 600;">${m.name}</h2>
                 <div class="editor-container">
@@ -269,59 +320,55 @@
                     <div class="terminal" id="term-${m.id}"></div>
                 </div>
             `;
-            flow.appendChild(card);
-            
-            editors[m.id] = CodeMirror.fromTextArea(document.getElementById(`edit-${m.id}`), {
-                mode: "python",
-                theme: "neo",
-                lineNumbers: false,
-                autoCloseBrackets: true
+                flow.appendChild(card);
+
+                editors[m.id] = CodeMirror.fromTextArea(document.getElementById(`edit-${m.id}`), {
+                    mode: "python",
+                    theme: "neo",
+                    lineNumbers: false,
+                    autoCloseBrackets: true
+                });
             });
-        });
-    }
-
-    async function runCode(id) {
-        const term = document.getElementById(`term-${id}`);
-        term.style.display = "block";
-        term.innerText = "Running...";
-        
-        try {
-            await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
-            await pyodide.runPythonAsync(editors[id].getValue());
-            const output = pyodide.runPython("sys.stdout.getvalue()");
-            term.innerText = output || "Done.";
-            term.style.color = "#50fa7b";
-
-            // Mark as complete
-            completedModules.add(id);
-            document.getElementById(`icon-${id}`).classList.add('completed');
-            updateProgress();
-        } catch (e) {
-            term.innerText = "Error: " + e.message;
-            term.style.color = "#ff5555";
         }
-    }
 
-    function updateProgress() {
-        const percent = (completedModules.size / pythonModules.length) * 100;
-        document.getElementById('progress-bar').style.width = percent + "%";
-    }
+        async function runCode(id) {
+            const term = document.getElementById(`term-${id}`);
+            term.style.display = "block";
+            term.innerText = "Running...";
 
-    function toggleTheme() {
-        const body = document.body;
-        const current = body.dataset.theme;
-        const next = current === "dark" ? "light" : "dark";
-        body.dataset.theme = next;
-        const theme = next === "dark" ? "dracula" : "neo";
-        Object.values(editors).forEach(ed => ed.setOption("theme", theme));
-    }
+            try {
+                await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
+                await pyodide.runPythonAsync(editors[id].getValue());
+                const output = pyodide.runPython("sys.stdout.getvalue()");
+                term.innerText = output || "Done.";
+                term.style.color = "#50fa7b";
 
-    start();
-</script>
+                // Mark as complete
+                completedModules.add(id);
+                document.getElementById(`icon-${id}`).classList.add('completed');
+                updateProgress();
+            } catch (e) {
+                term.innerText = "Error: " + e.message;
+                term.style.color = "#ff5555";
+            }
+        }
+
+        function updateProgress() {
+            const percent = (completedModules.size / pythonModules.length) * 100;
+            document.getElementById('progress-bar').style.width = percent + "%";
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.dataset.theme;
+            const next = current === "dark" ? "light" : "dark";
+            body.dataset.theme = next;
+            const theme = next === "dark" ? "dracula" : "neo";
+            Object.values(editors).forEach(ed => ed.setOption("theme", theme));
+        }
+
+        start();
+    </script>
 </body>
+
 </html>
-
-
-
-
-
