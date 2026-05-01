@@ -1,0 +1,15 @@
+{
+  "name": "Code Swiftly IDE",
+  "short_name": "CodeSwiftly",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F5F5F7",
+  "theme_color": "#0071E3",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968350.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
