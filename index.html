@@ -34,6 +34,7 @@
             background-color: var(--apple-bg);
             color: var(--apple-text);
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         #progress-container {
@@ -43,17 +44,6 @@
         #progress-bar {
             width: 0%; height: 100%; background: var(--apple-blue);
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .pulse-dot {
-            height: 8px; width: 8px; background-color: var(--apple-green);
-            border-radius: 50%; display: inline-block; margin-right: 10px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(52, 199, 89, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
         }
 
         .dock-wrapper {
@@ -71,36 +61,30 @@
             font-weight: 700; cursor: pointer; transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             background: rgba(0,0,0,0.03); color: var(--apple-text);
         }
-        .dock-icon:hover { transform: scale(1.3) translateX(10px); background: var(--apple-blue); color: white; }
-        .dock-icon.completed { border: 2px solid var(--apple-blue); box-shadow: 0 4px 12px rgba(0,113,227,0.2); }
+        .dock-icon:hover { transform: scale(1.2) translateX(5px); background: var(--apple-blue); color: white; }
+        .dock-icon.completed { border: 2px solid var(--apple-blue); background: white; }
 
-        .main-content { margin-left: 160px; max-width: 800px; padding: 0 40px 100px; }
+        .main-content { margin-left: 140px; max-width: 900px; padding: 0 40px 100px; }
 
         .apple-card {
-            background: white; border: 1px solid var(--apple-border); border-radius: 30px;
-            padding: 40px; margin-bottom: 80px; opacity: 0; transform: translateY(40px);
-            position: relative;
+            background: white; border: 1px solid var(--apple-border); border-radius: 24px;
+            padding: 30px; margin-bottom: 60px; opacity: 0; transform: translateY(30px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
         }
 
-        .module-indicator {
-            position: absolute; left: -140px; width: 100px; text-align: right;
-            font-size: 0.7rem; font-weight: 800; color: var(--apple-dim);
-            text-transform: uppercase; letter-spacing: 0.15em;
-        }
-
-        .editor-container { margin-top: 25px; border-radius: 20px; overflow: hidden; border: 1px solid var(--apple-border); }
-        .CodeMirror { height: auto; font-family: "SF Mono", monospace; font-size: 14px; padding: 20px; }
+        .editor-container { margin-top: 20px; border-radius: 16px; overflow: hidden; border: 1px solid var(--apple-border); }
+        .CodeMirror { height: auto; font-family: "SF Mono", "Fira Code", monospace; font-size: 14px; padding: 15px; }
 
         .apple-btn {
-            background: var(--apple-text); color: white; border: none;
-            padding: 12px 28px; border-radius: 50px; font-weight: 600; cursor: pointer;
-            transition: 0.3s ease;
+            background: var(--apple-blue); color: white; border: none;
+            padding: 10px 24px; border-radius: 50px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .apple-btn:hover { transform: scale(1.05); }
+        .apple-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
         .terminal {
-            background: #111; color: #50fa7b; padding: 20px; border-radius: 0 0 20px 20px;
-            font-family: "SF Mono", monospace; display: none; font-size: 0.9rem; white-space: pre-wrap;
+            background: #1c1c1e; color: #34C759; padding: 20px; border-radius: 0 0 16px 16px;
+            font-family: "SF Mono", monospace; display: none; font-size: 0.85rem; line-height: 1.5;
         }
     </style>
 </head>
@@ -113,19 +97,16 @@
 </div>
 
 <main class="main-content">
-    <header style="padding: 120px 0 80px;">
-        <h1 style="font-size: 5rem; margin: 0; letter-spacing: -4px; font-weight: 800;">Code Swiftly.</h1>
-        <div style="display: flex; align-items: center; margin-top: 10px;">
-            <span id="pulse-indicator" style="display:none;" class="pulse-dot"></span>
-            <p id="engine-status" style="color: var(--apple-dim); font-size: 1.2rem; margin:0;">Initializing Engine...</p>
-        </div>
+    <header style="padding: 100px 0 60px;">
+        <h1 style="font-size: 4rem; margin: 0; letter-spacing: -3px; font-weight: 800;">Code Swiftly.</h1>
+        <p id="engine-status" style="color: var(--apple-dim); font-size: 1.1rem; margin-top: 10px;">Initializing Python Engine...</p>
     </header>
     <div id="master-flow"></div>
 </main>
 
 <script>
     const pythonModules = [
-        // Days 1 to 26 (Your original established series)
+        // Days 1-26: Fundamentals & Established Projects
         { id: 1, name: "Introduction", code: "print('Welcome to Code Swiftly.')\nprint('Python is running natively in your browser.')" },
         { id: 2, name: "Variable Logic", code: "name = 'Swift'\nversion = 3.0\nprint(f'{name} v{version} active.')" },
         { id: 3, name: "List Architectures", code: "stack = ['Wasm', 'GSAP', 'CodeMirror']\nstack.append('PWA')\nprint(f'Project Stack: {stack}')" },
@@ -150,38 +131,39 @@
         { id: 22, name: "Auth Tokens", code: "print('Bearer Token active.')" },
         { id: 23, name: "POST Protocols", code: "print('Data Transmitted.')" },
         { id: 24, name: "Error Resilience", code: "print('Recovery logic ready.')" },
-        { id: 25, name: "Asyncio", code: "import asyncio\nasync def fetch():\n    print('Async task started...')\n    await asyncio.sleep(0.5)\n    print('Finished.')\nawait fetch()" },
+        { id: 25, name: "Asyncio", code: "import asyncio\nasync def fetch():\n    await asyncio.sleep(0.5)\n    print('Async task finished.')\nawait fetch()" },
         { id: 26, name: "Performance", code: "import time\nstart = time.time()\n_ = [x for x in range(10000)]\nprint(f'Execution Time: {time.time()-start:.6f}s')" },
         
-        // Days 27-30 (The New Continuation)
-        { id: 27, name: "Agentic Reasoning", code: "# Simulating a 'Thought-Action' Loop\ndef agent_think(task):\n    print(f'Thought: How to solve {task}?')\n    return 'Action: Query local database'\n\nprint(agent_think('Optimize Python Code'))" },
-        { id: 28, name: "Vector Scoring (RAG)", code: "# Simple Semantic Match Logic\ndef similarity(a, b):\n    matches = set(a.split()) & set(b.split())\n    return len(matches) / max(len(a.split()), 1)\n\nprint(f'Match Score: {similarity(\"AI Python\", \"Python for AI\")}')" },
-        { id: 29, name: "Prompt Templates", code: "# Formatting AI Instructions\ndef create_prompt(inp):\n    return f'### INSTRUCTION ###\\nSolve: {inp}\\n### OUTPUT ###'\n\nprint(create_prompt('Reverse string \"Swift\"'))" },
-        { id: 30, name: "AI Safety Guardrails", code: "# Security check for AI outputs\nblocked = ['os.system', 'eval', 'subprocess']\ndef check(code):\n    return 'Safe' if not any(b in code for b in blocked) else 'Malicious'\n\nprint(f'Status: {check(\"print(1+1)\")}')" },
-        { id: 31, name: "AI Memory Systems", code: "# Day 31: Contextual Memory Buffer\nclass AIMemory:\n    def __init__(self):\n        self.history = []\n\n    def add_context(self, user, bot):\n        self.history.append({'user': user, 'bot': bot})\n\n    def get_context(self):\n        return f'Memory: {self.history[-1:] if self.history else \"Empty\"}'\n\nmem = AIMemory()\nmem.add_context('Hi', 'Hello!')\nprint(mem.get_context())\nprint('Memory persistence active.')" },
-        { id: 32, name: "AI Response Streaming", code: "# Day 32: Simulating Token Streaming\nimport time\n\ndef stream_response(text):\n    print('AI Typing...')\n    for char in text:\n        # Simulating the 'typing' effect\n        # In a real app, this would update the UI state\n        print(char, end='', flush=True)\n        time.sleep(0.05)\n    print('\\nStream Complete.')\n\nresponse = 'The quick brown fox jumps over the lazy dog.'\nstream_response(response)" },
-        { id: 33, name: "Parallel Agent Logic", code: "# Day 33: Concurrent Task Simulation\nimport asyncio\n\nasync def task_one():\n    print('Agent Thought A: Searching Web...')\n    await asyncio.sleep(0.8)\n    print('Web Search Complete.')\n\nasync def task_two():\n    print('Agent Thought B: Querying Database...')\n    await asyncio.sleep(0.4)\n    print('Database Query Complete.')\n\nasync def run_parallel():\n    print('Starting Parallel Operations...')\n    await asyncio.gather(task_one(), task_two())\n    print('All concurrent thoughts processed.')\n\nimport pyodide_js\nawait run_parallel()" }
+        // Days 27-33: AI & Agentic Reasoning (New)
+        { id: 27, name: "Agentic Reasoning", code: "# Day 27: AI Thought Loop\ndef agent_reason(task):\n    print(f'Task: {task}')\n    return 'Decision: Use WebSearch Tool'\nprint(agent_reason('Weather in Hyderabad'))" },
+        { id: 28, name: "Vector Scoring", code: "# Day 28: Simple Semantic Matching\ndef get_score(query, doc):\n    common = set(query.split()) & set(doc.split())\n    return len(common) / len(query.split())\nprint(f'Match Score: {get_score(\"Python AI\", \"Python is for AI\")}')" },
+        { id: 29, name: "Prompt Templates", code: "# Day 29: Dynamic Prompting\ndef format_prompt(inp, role='Expert'):\n    return f'Role: {role}\\nSolve: {inp}'\nprint(format_prompt('Write a function'))" },
+        { id: 30, name: "AI Guardrails", code: "# Day 30: Safety Checks\nblocked = ['import os', 'eval']\ndef is_safe(code):\n    return not any(w in code for w in blocked)\nprint(f'Safe? {is_safe(\"print(1)\")}')" },
+        { id: 31, name: "AI Memory", code: "# Day 31: Context Buffer\nclass Memory:\n    def __init__(self): self.hist = []\n    def add((u, b)): self.hist.append({'u':u, 'b':b})\nmem = Memory()\nprint('Context system ready.')" },
+        { id: 32, name: "Response Streaming", code: "# Day 32: Token Simulation\nimport time\ndef stream(t):\n    for c in t:\n        print(c, end='', flush=True)\n        time.sleep(0.02)\nstream('Streaming active...')" },
+        { id: 33, name: "Parallel Agent Logic", code: "# Day 33: Concurrency\nimport asyncio\nasync def t1():\n    print('Task A started...')\n    await asyncio.sleep(0.5)\nawait t1()" }
     ];
 
     let pyodide;
     const editors = {};
     const completedModules = new Set();
 
-    async function start() {
+    async function init() {
         try {
             pyodide = await loadPyodide();
-            document.getElementById('engine-status').innerText = "Python 3.11 Engine (Wasm) Live";
-            document.getElementById('pulse-indicator').style.display = "inline-block";
-            build();
-            gsap.to(".apple-card", { opacity: 1, y: 0, duration: 1.2, stagger: 0.1, ease: "power4.out" });
+            document.getElementById('engine-status').innerText = "Python 3.11 Wasm Engine Ready";
+            document.getElementById('engine-status').style.color = "var(--apple-green)";
+            render();
+            gsap.to(".apple-card", { opacity: 1, y: 0, duration: 0.8, stagger: 0.05 });
         } catch (e) { document.getElementById('engine-status').innerText = "Engine Load Failed."; }
     }
 
-    function build() {
+    function render() {
         const dock = document.getElementById('side-dock');
         const flow = document.getElementById('master-flow');
 
         pythonModules.forEach(m => {
+            // Dock Icon
             const icon = document.createElement('div');
             icon.className = 'dock-icon';
             icon.id = `icon-${m.id}`;
@@ -189,23 +171,23 @@
             icon.onclick = () => document.getElementById(`day-${m.id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
             dock.appendChild(icon);
 
+            // Card
             const card = document.createElement('div');
             card.className = 'apple-card';
             card.id = `day-${m.id}`;
             card.innerHTML = `
-                <div class="module-indicator">Day ${m.id}</div>
-                <h2 style="margin:0; font-weight: 700;">${m.name}</h2>
+                <h2 style="margin:0; font-size: 1.5rem;">Day ${m.id}: ${m.name}</h2>
                 <div class="editor-container">
                     <textarea id="edit-${m.id}">${m.code}</textarea>
-                    <div style="padding: 15px; border-top: 1px solid var(--apple-border); text-align: right;">
-                        <button class="apple-btn" onclick="runCode(${m.id})">Execute</button>
+                    <div style="padding: 12px; background: #fbfbfd; border-top: 1px solid var(--apple-border); text-align: right;">
+                        <button class="apple-btn" onclick="runCode(${m.id})">Run Code</button>
                     </div>
                     <div class="terminal" id="term-${m.id}"></div>
                 </div>
             `;
             flow.appendChild(card);
             editors[m.id] = CodeMirror.fromTextArea(document.getElementById(`edit-${m.id}`), {
-                mode: "python", theme: "neo", lineNumbers: false, autoCloseBrackets: true
+                mode: "python", theme: "neo", lineNumbers: true, indentUnit: 4
             });
         });
     }
@@ -213,26 +195,20 @@
     async function runCode(id) {
         const term = document.getElementById(`term-${id}`);
         term.style.display = "block";
-        term.innerText = ">>> Initializing Execution...";
+        term.innerText = "Running...";
         try {
             await pyodide.runPythonAsync(`import sys, io\nsys.stdout = io.StringIO()`);
             await pyodide.runPythonAsync(editors[id].getValue());
             const output = pyodide.runPython("sys.stdout.getvalue()");
-            term.innerText = output || "Execution complete.";
+            term.innerText = output || "Process finished with no output.";
+            
             completedModules.add(id);
             document.getElementById(`icon-${id}`).classList.add('completed');
-            document.getElementById('progress-bar').style.width = (completedModules.size / 30 * 100) + "%";
-        } catch (e) { term.innerText = "Runtime Error: " + e.message; }
+            document.getElementById('progress-bar').style.width = (completedModules.size / 33 * 100) + "%";
+        } catch (e) { term.innerText = "Error: " + e.message; }
     }
 
-    // Service Worker for Day 27+ Offline PWA support
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
-        });
-    }
-
-    start();
+    init();
 </script>
 </body>
 </html>
