@@ -486,7 +486,27 @@ ${userCode}
 \`\`\`
 ${lastError ? `Runtime error they got: ${lastError}` : "Code ran but student needs deeper understanding."}
 
+Give ONE short insight or tip (2-3 sentences max). Point out what could be improved or explain why the code works. Be direct, no fluff.`;
 
+    try {
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                messages: [{ role: "user", content: prompt }]
+            })
+        });
+        const data = await res.json();
+        const hint = data.content?.find(b => b.type === "text")?.text || "No hint available.";
+        hintBox.className = "hint-box visible";
+        hintBox.textContent = "💡 " + hint;
+    } catch(e) {
+        hintBox.className = "hint-box visible";
+        hintBox.textContent = "⚠ Hint unavailable. Check your connection.";
+    }
+}
 
 // ═══════════════════════════════════════════
 // SERVICE WORKER
